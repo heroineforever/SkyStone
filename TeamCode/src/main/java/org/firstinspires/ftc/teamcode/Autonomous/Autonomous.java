@@ -10,7 +10,7 @@ public class Autonomous extends LinearOpMode{
 
     Hardware robot;
 
-    //imu
+    //imute
     BNO055IMU imu;
     Orientation lastAngles = new Orientation();
     double globalAngle, power = 0.30, correction;
