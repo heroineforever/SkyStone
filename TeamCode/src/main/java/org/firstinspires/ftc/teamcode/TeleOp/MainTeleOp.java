@@ -1,4 +1,15 @@
+package org.firstinspires.ftc.teamcode.teamcode.TeleOp;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import org.firstinspires.ftc.teamcode.teamcode.Hardware;
+import org.firstinspires.ftc.teamcode.teamcode.Testers.MecanumTest;
 
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
+import java.lang.Math;
 
 
 @TeleOp(name="Main TeleOp", group = "Linear Opmode");
@@ -35,8 +46,12 @@ public class MainTeleOp extends OpMode {
     //driving hub
     public void DriveControl(){
         //got the direction from the controller then told the motors what to do
-
+        double movement = gamepad1.left_stick_y;
+        double turn = gamepad1.right_stick_x;
         //joystick ranges -1 to 1
+        robot.rightDrive.setPower(movement*(turn*-1));
+        robot.leftDrive.setPower(movement*turn);
+
     }
 
     public void aRandomServoControl(){
