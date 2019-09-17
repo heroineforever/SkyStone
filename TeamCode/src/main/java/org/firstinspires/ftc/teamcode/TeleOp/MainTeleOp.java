@@ -40,10 +40,12 @@ public class MainTeleOp extends OpMode {
         //runtime = new ElapsedTime();
     }
 
-    //start code
+    //Code that runs repeatedly
     @Override
     public void loop() {
         DriveControl();
+        HorizontalLiftControl();
+        VerticalLiftControl();
     }
 
     //driving hub
