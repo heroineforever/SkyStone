@@ -2,9 +2,7 @@ package org.firstinspires.ftc.teamcode.teamcode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-
-import org.firstinspires.ftc.teamcode.teamcode.BetterHardwareRobot;
-import org.firstinspires.ftc.teamcode.teamcode.HardwareRobot;
+import org.firstinspires.ftc.teamcode.teamcode.Hardware;
 import org.firstinspires.ftc.teamcode.teamcode.Testers.MecanumTest;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
