@@ -1,3 +1,11 @@
+package org.firstinspires.ftc.teamcode.teamcode;
+
+import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
+
 public class HardwareRobot {
 
     public DcMotor leftDrive, rightDrive;
@@ -6,7 +14,7 @@ public class HardwareRobot {
 
 
     //Constructor
-    public HardwareRobot(HardWareMap hwmp) {
+    public Hardware(HardWareMap hwmp) {
         //Assign all motors/servos to the spots on the phone
 
         //Motors

@@ -28,8 +28,8 @@ public class MainTeleOp extends OpMode {
     }
     //start code
     @Override
-    public void loop(){
-
+    public void loop() {
+        DriveControl();
     }
 
     //driving hub
