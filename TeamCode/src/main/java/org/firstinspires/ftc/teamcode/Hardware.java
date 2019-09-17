@@ -15,7 +15,6 @@ public class HardwareRobot {
         horizontalLift = hwmp.dcMotor.get("Horizontal Lift");
         verticalLift = hwmp.dcMotor.get("Vertical Left");
 
-        //hello
         //If you want to put the motor flipped
         rightDrive.setDirection(DcMotor.Direction.REVERSE);
 
