@@ -48,7 +48,7 @@ public class MainTeleOp extends OpMode {
         VerticalLiftControl();
     }
 
-    //driving hub
+    //Driving Control function
     public void DriveControl() {
         //got the direction from the controller then told the motors what to do
         double movement = gamepad1.left_stick_y;
