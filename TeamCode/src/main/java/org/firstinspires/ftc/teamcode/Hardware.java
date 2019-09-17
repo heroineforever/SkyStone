@@ -1,3 +1,9 @@
+package org.firstinspires.ftc.teamcode.teamcode.TeleOp;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import org.firstinspires.ftc.teamcode.teamcode.HardwareRobot;
+
 public class HardwareRobot {
 
     public DcMotor leftDrive, rightDrive;
