@@ -1,7 +1,9 @@
 package org.firstinspires.ftc.teamcode.TeleOp;
+
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+
 import org.firstinspires.ftc.teamcode.Hardware;
 //import org.firstinspires.ftc.teamcode.teamcode.Testers.MecanumTest;
 
@@ -12,7 +14,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import java.lang.Math;
 
 
-@TeleOp(name="Main TeleOp", group = "Linear Opmode");
+@TeleOp(name = "Main TeleOp", group = "Linear Opmode");
 
 //robot.motor.setPower(numerical value);
 //encoders are doubles
@@ -31,12 +33,13 @@ public class MainTeleOp extends OpMode {
 
     @Override
     //initialize
-    public void init(){
+    public void init() {
         //map hardware
         robot = new Hardware(hardwareMap);
 
         //runtime = new ElapsedTime();
     }
+
     //start code
     @Override
     public void loop() {
@@ -44,19 +47,34 @@ public class MainTeleOp extends OpMode {
     }
 
     //driving hub
-    public void DriveControl(){
+    public void DriveControl() {
         //got the direction from the controller then told the motors what to do
         double movement = gamepad1.left_stick_y;
         double turn = gamepad1.right_stick_x;
         //joystick ranges -1 to 1
-        robot.rightDrive.setPower(movement*(turn*-1));
-        robot.leftDrive.setPower(movement*turn);
+        robot.rightDrive.setPower(movement * (turn * -1));
+        robot.leftDrive.setPower(movement * turn);
 
     }
 
-    public void aRandomServoControl(){
-        //servo ranges 0 to 1, 0 is min
-        robot.liftServo.setPostion(Servo.MIN_POSITION);
+    //Function for handling horizontal lift
+    public void HorizontalLiftControl() {
+        if (gamepad1.dpad_left)
+            robot.horizontalLift.setPower(-.7);
+        else if (gamepad1.dpad_right)
+            robot.horizontalLift.setPower(.7);
+        else
+            robot.horizontalLift.setPower(0);
+    }
+
+    //Function for handling vertical lift
+    public void VerticalLiftControl(){
+        if (gamepad1.a)
+            robot.verticalLift.setPower(-.7);
+        else if (gamepad1.b)
+            robot.verticalLift.setPower(.7);
+        else
+            robot.verticalLift.setPower(0);
     }
 
 }
