@@ -14,7 +14,7 @@ public class HardwareRobot {
 
 
     //Constructor
-    public Hardware(HardWareMap hwmp) {
+    public Hardware(HardwareMap hwmp) {
         //Assign all motors/servos to the spots on the phone
 
         //Motors
