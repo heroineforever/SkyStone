@@ -1,40 +1,18 @@
-package org.firstinspires.ftc.teamcode.Autonomous;
-
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-
-import java.lang.annotation.Annotation;
 
 
-public class AutoRun implements Autonomous {
+
+@Autonomous(name = "An Autonomous Test", group = "Autonomous")
+
+public class AutoRun extends Autonomous{
 
 
-    @Override
-    public String name() {
-        return null;
-    }
 
     @Override
-    public String group() {
-        return null;
-    }
+    public void runOpMode() {
+        super.runOpMode();
 
-    @Override
-    public boolean equals(Object o) {
-        return false;
-    }
+        //use methods from autonomous to command the robot
 
-    @Override
-    public int hashCode() {
-        return 0;
-    }
-
-    @Override
-    public String toString() {
-        return null;
-    }
-
-    @Override
-    public Class<? extends Annotation> annotationType() {
-        return null;
+        waitForStart();
     }
 }
