@@ -1,4 +1,4 @@
-
+package org.firstinspires.ftc.teamcode.Autonomous;
 
 
 //motor.setZeroPowerBehavior (if you want it float or brake)
@@ -6,7 +6,14 @@
 //robot is a hardware object so you can use hardware methods
 //idle() -
 
-public class Autonomous extends LinearOpMode{
+import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Hardware;
+
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+
+public class Autonomous extends LinearOpMode {
 
     Hardware robot;
 
@@ -18,17 +25,19 @@ public class Autonomous extends LinearOpMode{
 
     @Override
     public void runOpMode(){
-        robot = new Hardware(hardwareMap);
-        runtime = new ElapsedTime();
+       /* robot = new Hardware(hardwareMap);
+        runtime = new ElapsedTime();*/
 
 
     }
-
+/*
     void waitAbsolute(double seconds)
     {
-        /*
+        */
+/*
         *It keeps the robot waiting until a certain time is reached
-        * */
+        * *//*
+
     } //wait to move on to next step
 
     void waitFor (double seconds){
@@ -44,6 +53,7 @@ public class Autonomous extends LinearOpMode{
         //stop motors
 
     }
+*/
 
 
 }
