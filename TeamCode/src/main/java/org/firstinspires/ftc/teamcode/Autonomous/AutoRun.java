@@ -1,7 +1,7 @@
 
 
 
-@Autonomous(name = "An Autonomous Test", group = "Autonomous");
+@Autonomous(name = "An Autonomous Test", group = "Autonomous")
 
 public class AutoRun extends Autonomous{
 
