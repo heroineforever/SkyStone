@@ -2,13 +2,22 @@ package org.firstinspires.ftc.teamcode.TeleOp;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.Hardware;
+//import org.firstinspires.ftc.teamcode.teamcode.Testers.MecanumTest;
+
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
+import java.lang.Math;
+
+
 
 
 @TeleOp(name = "Main TeleOp", group = "Linear Opmode")
-@Disabled
+
 //robot.motor.setPower(numerical value);
 //encoders are doubles
 //.getCurrentPosition(), retrieves encoder values, getPosition() for servo
@@ -29,6 +38,7 @@ public class MainTeleOp extends OpMode {
     public void init() {
         //map hardware
         robot = new Hardware(hardwareMap);
+
         //runtime = new ElapsedTime();
     }
 
@@ -48,6 +58,7 @@ public class MainTeleOp extends OpMode {
         //joystick ranges -1 to 1
         robot.rightDrive.setPower(movement * (turn * -1));
         robot.leftDrive.setPower(movement * turn);
+
     }
 
     //Function for handling horizontal lift
