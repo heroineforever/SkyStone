@@ -17,7 +17,7 @@ import java.lang.Math;
 
 
 @TeleOp(name = "Main TeleOp", group = "Linear Opmode")
-
+@Disabled
 //robot.motor.setPower(numerical value);
 //encoders are doubles
 //.getCurrentPosition(), retrieves encoder values, getPosition() for servo
@@ -48,6 +48,15 @@ public class MainTeleOp extends OpMode {
         DriveControl();
         HorizontalLiftControl();
         VerticalLiftControl();
+
+        telemetry.addData("Left Drive Position", robot.leftDrive.getCurrentPosition());
+        telemetry.addData("Right Drive Position", robot.rightDrive.getCurrentPosition());
+        telemetry.addData("Left Drive Power", robot.leftDrive.getPower());
+        telemetry.addData("Right Drive Power", robot.rightDrive.getPower());
+
+        //telemetry.addData("bucket position", robot.scoopServo.getPosition());
+
+        telemetry.update();
     }
 
     //Driving Control function
