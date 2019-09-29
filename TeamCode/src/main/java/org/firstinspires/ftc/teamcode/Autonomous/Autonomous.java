@@ -1,3 +1,12 @@
+package org.firstinspires.ftc.teamcode.Autonomous;
+
+import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.teamcode.Hardware;
+
 
 
 
@@ -19,7 +28,7 @@ public class Autonomous extends LinearOpMode{
     @Override
     public void runOpMode(){
         robot = new Hardware(hardwareMap);
-        runtime = new ElapsedTime();
+        //runtime = new ElapsedTime();
 
 
     }
@@ -32,7 +41,7 @@ public class Autonomous extends LinearOpMode{
     } //wait to move on to next step
 
     void waitFor (double seconds){
-        WaitAbsolute(getNewTime(seconds));
+        //WaitAbsolute(getNewTime(seconds));
         //adds the seconds to the current time
     }
 
