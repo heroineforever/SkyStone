@@ -56,10 +56,10 @@ public class MainTeleOp extends OpMode {
         HorizontalLiftControl();
         VerticalLiftControl();
 
-        telemetry.addData("Left Drive Position ", robot.leftDrive.getCurrentPosition());
-        telemetry.addData("Right Drive Position ", robot.rightDrive.getCurrentPosition());
-        telemetry.addData("Left Drive Power ", robot.leftDrive.getPower());
-        telemetry.addData("Right Drive Power ", robot.rightDrive.getPower());
+        telemetry.addData("Left Drive Position", robot.leftDrive.getCurrentPosition());
+        telemetry.addData("Right Drive Position", robot.rightDrive.getCurrentPosition());
+        telemetry.addData("Left Drive Power", robot.leftDrive.getPower());
+        telemetry.addData("Right Drive Power", robot.rightDrive.getPower());
 
         //telemetry.addData("bucket position", robot.scoopServo.getPosition());
 
