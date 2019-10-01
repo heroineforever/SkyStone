@@ -41,20 +41,15 @@ public class MainTeleOp extends OpMode {
         //map hardware
         robot = new Hardware(hardwareMap);
 
-        ElapsedTime runtime = new ElapsedTime();
+        //ElapsedTime runtime = new ElapsedTime();
     }
 
     //Code that runs repeatedly
     @Override
     public void loop() {
-        while (getRuntime() < 10)
-        {
-            robot.rightDrive.setPower(0.3);
-            robot.leftDrive.setPower(0.3);
-        }
         DriveControl();
-        HorizontalLiftControl();
-        VerticalLiftControl();
+        //HorizontalLiftControl();
+        //VerticalLiftControl();
 
         telemetry.addData("Left Drive Position", robot.leftDrive.getCurrentPosition());
         telemetry.addData("Right Drive Position", robot.rightDrive.getCurrentPosition());
@@ -72,13 +67,22 @@ public class MainTeleOp extends OpMode {
         movement = gamepad1.left_stick_y;
         turn = gamepad1.right_stick_x;
         //joystick ranges -1 to 1
-        robot.rightDrive.setPower(movement * (turn * -1));
-        robot.leftDrive.setPower(movement * turn);
+        if (turn == 0)
+        {
+            robot.rightDrive.setPower(movement);
+            robot.leftDrive.setPower(movement);
+        }
+        else
+        {
+            robot.rightDrive.setPower(turn);
+            robot.leftDrive.setPower(turn * -1);
+        }
+
 
     }
 
     //Function for handling horizontal lift
-    public void HorizontalLiftControl() {
+    /*public void HorizontalLiftControl() {
         if (gamepad1.dpad_left)
             robot.horizontalLift.setPower(-.7);
         else if (gamepad1.dpad_right)
@@ -95,6 +99,6 @@ public class MainTeleOp extends OpMode {
             robot.verticalLift.setPower(.7);
         else
             robot.verticalLift.setPower(0);
-    }
+    }*/
 
 }
