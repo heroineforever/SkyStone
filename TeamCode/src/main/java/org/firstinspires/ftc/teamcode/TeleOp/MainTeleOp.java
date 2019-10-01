@@ -41,12 +41,17 @@ public class MainTeleOp extends OpMode {
         //map hardware
         robot = new Hardware(hardwareMap);
 
-        //runtime = new ElapsedTime();
+        ElapsedTime runtime = new ElapsedTime();
     }
 
     //Code that runs repeatedly
     @Override
     public void loop() {
+        while (getRuntime() < 10)
+        {
+            robot.rightDrive.setPower(0.3);
+            robot.leftDrive.setPower(0.3);
+        }
         DriveControl();
         HorizontalLiftControl();
         VerticalLiftControl();
