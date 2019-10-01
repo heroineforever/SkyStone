@@ -37,20 +37,20 @@ public class Hardware{
 
         rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);//reset
         leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        horizontalLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        verticalLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //horizontalLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //verticalLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER); //get ready for rerun
         leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        horizontalLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        verticalLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //horizontalLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //verticalLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     public void stopAllMotors() {
         rightDrive.setPower(0); //this method to stop any motors, range -1 to 1
         leftDrive.setPower(0);
-        verticalLift.setPower(0);
-        horizontalLift.setPower(0);
+        //verticalLift.setPower(0);
+        //horizontalLift.setPower(0);
     }
 
 
