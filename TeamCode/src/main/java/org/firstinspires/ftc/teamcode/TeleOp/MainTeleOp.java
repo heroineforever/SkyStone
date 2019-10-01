@@ -17,7 +17,7 @@ import java.lang.Math;
 
 
 @TeleOp(name = "Main TeleOp", group = "Linear Opmode")
-
+//@Disabled
 //robot.motor.setPower(numerical value);
 //encoders are doubles
 //.getCurrentPosition(), retrieves encoder values, getPosition() for servo
@@ -31,6 +31,8 @@ public class MainTeleOp extends OpMode {
     //make a robot
     Hardware robot;
     //private ElaspedTime runTime; for if you need to drive by time
+    double movement;
+    double turn;
 
 
     @Override
@@ -39,22 +41,36 @@ public class MainTeleOp extends OpMode {
         //map hardware
         robot = new Hardware(hardwareMap);
 
-        //runtime = new ElapsedTime();
+        ElapsedTime runtime = new ElapsedTime();
     }
 
     //Code that runs repeatedly
     @Override
     public void loop() {
+        while (getRuntime() < 10)
+        {
+            robot.rightDrive.setPower(0.3);
+            robot.leftDrive.setPower(0.3);
+        }
         DriveControl();
         HorizontalLiftControl();
         VerticalLiftControl();
+
+        telemetry.addData("Left Drive Position ", robot.leftDrive.getCurrentPosition());
+        telemetry.addData("Right Drive Position ", robot.rightDrive.getCurrentPosition());
+        telemetry.addData("Left Drive Power ", robot.leftDrive.getPower());
+        telemetry.addData("Right Drive Power ", robot.rightDrive.getPower());
+
+        //telemetry.addData("bucket position", robot.scoopServo.getPosition());
+
+        telemetry.update();
     }
 
     //Driving Control function
     public void DriveControl() {
         //got the direction from the controller then told the motors what to do
-        double movement = gamepad1.left_stick_y;
-        double turn = gamepad1.right_stick_x;
+        movement = gamepad1.left_stick_y;
+        turn = gamepad1.right_stick_x;
         //joystick ranges -1 to 1
         robot.rightDrive.setPower(movement * (turn * -1));
         robot.leftDrive.setPower(movement * turn);
