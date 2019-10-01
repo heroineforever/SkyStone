@@ -20,8 +20,8 @@ public class Hardware{
         //Motors
         leftDrive = hwmp.dcMotor.get("Left Drive");
         rightDrive = hwmp.dcMotor.get("Right Drive");
-        horizontalLift = hwmp.dcMotor.get("Horizontal Lift");
-        verticalLift = hwmp.dcMotor.get("Vertical Left");
+        //horizontalLift = hwmp.dcMotor.get("Horizontal Lift");
+        //verticalLift = hwmp.dcMotor.get("Vertical Left");
 
         //If you want to put the motor flipped
         rightDrive.setDirection(DcMotor.Direction.REVERSE);
