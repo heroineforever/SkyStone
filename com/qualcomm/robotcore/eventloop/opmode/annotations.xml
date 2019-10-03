@@ -1,0 +1,5 @@
+<root>
+    <item name='com.qualcomm.robotcore.eventloop.opmode.TeleOp java.lang.String group()'>
+        <annotation name='org.jetbrains.annotations.NotNull' />
+    </item>
+</root>
