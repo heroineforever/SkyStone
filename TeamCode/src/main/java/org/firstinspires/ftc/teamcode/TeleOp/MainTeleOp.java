@@ -70,7 +70,7 @@ public class MainTeleOp extends OpMode {
             robot.leftDrive.setPower(movement);
         } else if (movement == 0) {
             robot.leftDrive.setPower(turn);
-            robot.rightDrive.setPower(turn);
+            robot.rightDrive.setPower(turn);//lol
         } else if (turn < 0) {
             robot.rightDrive.setPower(turn * movement); //-1
             robot.leftDrive.setPower(turn * -1 * movement);  //1
@@ -80,7 +80,7 @@ public class MainTeleOp extends OpMode {
         }
 
 
-    }asdsdf
+    }
 
 
     //Function for handling horizontal lift
