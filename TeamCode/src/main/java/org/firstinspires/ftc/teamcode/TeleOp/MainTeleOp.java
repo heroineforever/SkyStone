@@ -14,8 +14,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import java.lang.Math;
 
 
-
-
 @TeleOp(name = "Main TeleOp", group = "Linear Opmode")
 //@Disabled
 //robot.motor.setPower(numerical value);
@@ -67,13 +65,10 @@ public class MainTeleOp extends OpMode {
         movement = gamepad1.left_stick_y;
         turn = gamepad1.right_stick_x;
         //joystick ranges -1 to 1
-        if (turn == 0)
-        {
+        if (turn == 0) {
             robot.rightDrive.setPower(movement);
             robot.leftDrive.setPower(movement);
-        }
-        else
-        {
+        } else {
             robot.rightDrive.setPower(turn);
             robot.leftDrive.setPower(turn * -1);
         }
