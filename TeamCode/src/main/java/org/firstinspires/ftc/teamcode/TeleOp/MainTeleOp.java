@@ -14,8 +14,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import java.lang.Math;
 
 
-
-
 @TeleOp(name = "Main TeleOp", group = "Linear Opmode")
 //@Disabled
 //robot.motor.setPower(numerical value);
@@ -53,8 +51,8 @@ public class MainTeleOp extends OpMode {
 
         telemetry.addData("Left Drive Position", robot.leftDrive.getCurrentPosition());
         telemetry.addData("Right Drive Position", robot.rightDrive.getCurrentPosition());
-        telemetry.addData("Left Drive Power", robot.leftDrive.getPower());
-        telemetry.addData("Right Drive Power", robot.rightDrive.getPower());
+        //telemetry.addData("Left Drive Power", robot.leftDrive.getPower());
+        //telemetry.addData("Right Drive Power", robot.rightDrive.getPower());
 
         //telemetry.addData("bucket position", robot.scoopServo.getPosition());
 
@@ -82,7 +80,7 @@ public class MainTeleOp extends OpMode {
         }
 
 
-    }
+    }asdsdf
 
 
     //Function for handling horizontal lift
