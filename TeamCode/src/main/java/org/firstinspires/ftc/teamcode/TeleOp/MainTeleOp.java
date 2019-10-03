@@ -82,6 +82,7 @@ public class MainTeleOp extends OpMode {
 
     }
 
+
     //Function for handling horizontal lift
     /*public void HorizontalLiftControl() {
         if (gamepad1.dpad_left)
