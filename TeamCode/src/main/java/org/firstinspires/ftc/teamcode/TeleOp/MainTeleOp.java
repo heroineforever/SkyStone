@@ -75,11 +75,11 @@ public class MainTeleOp extends OpMode {
             robot.leftDrive.setPower(turn);
             robot.rightDrive.setPower(turn);//lol
         } else if (turn < 0) {
-            robot.rightDrive.setPower(turn * movement); //-1
-            robot.leftDrive.setPower(turn * -1 * movement);  //1
+            robot.rightDrive.setPower(turn * -1 * movement); //-1
+            robot.leftDrive.setPower(turn  * movement);  //1
         } else {
-            robot.rightDrive.setPower(turn * movement);
-            robot.leftDrive.setPower(turn *-1* movement);
+            robot.rightDrive.setPower(turn *-1* movement);
+            robot.leftDrive.setPower(turn * movement);
         }
 
 
