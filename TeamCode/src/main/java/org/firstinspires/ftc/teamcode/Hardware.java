@@ -10,8 +10,9 @@ public class Hardware{
 
     public DcMotor leftDrive, rightDrive;
 
-    public DcMotor horizontalLift, verticalLift;
+    public DcMotor frontRight, frontLeft, backRight, backLeft;
 
+    public Servo latch;
 
     //Constructor
     public Hardware(HardwareMap hwmp) {
@@ -20,14 +21,20 @@ public class Hardware{
         //Motors
         leftDrive = hwmp.dcMotor.get("Left Drive");
         rightDrive = hwmp.dcMotor.get("Right Drive");
-        //horizontalLift = hwmp.dcMotor.get("Horizontal Lift");
-        //verticalLift = hwmp.dcMotor.get("Vertical Left");
+
+        frontRight = hwmp.dcMotor.get("Front Right");
+        frontLeft = hwmp.dcMotor.get("Front Left");
+        backRight = hwmp.dcMotor.get("Back Right");
+        backLeft = hwmp.dcMotor.get("Back Left");
 
         //If you want to put the motor flipped
         rightDrive.setDirection(DcMotor.Direction.REVERSE);
 
+        frontRight.setDirection(DcMotor.Direction.REVERSE);
+        frontLeft.setDirection(DcMotor.Direction.REVERSE);
+
         //Servos
-        //liftServo = hwmp.servo.get("Lift Servo");
+        latch = hwmp.servo.get("Latch Servo");
 
 
     }
@@ -36,14 +43,17 @@ public class Hardware{
     public void resetDriveEncoders() {
 
         rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);//reset
+
         leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        //horizontalLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        //verticalLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER); //get ready for rerun
         leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        //horizontalLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        //verticalLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
     }
 
     public void stopAllMotors() {
