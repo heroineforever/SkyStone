@@ -58,7 +58,6 @@ public class MainTeleOp extends OpMode {
         telemetry.addData("Right JoyStick X", gamepad1.right_stick_x);
 
         //telemetry.addData("bucket position", robot.scoopServo.getPosition());
-
         telemetry.update();
     }
 
