@@ -5,6 +5,9 @@
  */
 buildscript {
     repositories {
+        flatDir {
+            dirs "tensorflow"
+        }
         google()
         jcenter()
 
