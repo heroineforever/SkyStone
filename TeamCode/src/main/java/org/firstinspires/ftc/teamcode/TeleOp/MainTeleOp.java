@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode.Hardware;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.vuforia.Vuforia;
 
 import java.lang.Math;
 
@@ -47,7 +48,6 @@ public class MainTeleOp extends OpMode {
         DriveControl();
         //HorizontalLiftControl();
         //VerticalLiftControl();
-
         //telemetry.addData("Left Drive Position", robot.leftDrive.getCurrentPosition());
         //telemetry.addData("Right Drive Position", robot.rightDrive.getCurrentPosition());
 
@@ -57,7 +57,6 @@ public class MainTeleOp extends OpMode {
         telemetry.addData("Right JoyStick X", gamepad1.right_stick_x);
 
         //telemetry.addData("bucket position", robot.scoopServo.getPosition());
-
         telemetry.update();
     }
 
