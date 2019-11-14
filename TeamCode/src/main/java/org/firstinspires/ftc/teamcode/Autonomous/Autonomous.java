@@ -10,7 +10,11 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraName;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.teamcode.Hardware;
 import org.tensorflow.lite.Interpreter;
 
@@ -19,15 +23,18 @@ import java.io.IOException;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 
+import static org.firstinspires.ftc.robotcore.external.tfod.TfodRoverRuckus.LABEL_GOLD_MINERAL;
+
 
 //motor.setZeroPowerBehavior (if you want it float or brake)
 //opModeIsActive() //if you running within 30 seconds
 //robot is a hardware object so you can use hardware methods
 //idle() -
 
-public class Autonomous extends LinearOpMode{
+public class Autonomous extends LinearOpMode {
 
     Hardware robot;
+    private static final String TFOD_MODEL_ASSET = "Skystone.tflite";
 
     //imute
     BNO055IMU imu;
@@ -39,22 +46,32 @@ public class Autonomous extends LinearOpMode{
     private DcMotor rightFrontDrive = null;
     private DcMotor leftBackDrive = null;
     private DcMotor rightBackDrive = null;
+    protected CameraName cameraName = null;
 
     private ElapsedTime runtime = new ElapsedTime();
     public Interpreter tflite;
 
+    //Vuforia stuff
+    private static final String VUFORIA_KEY = "ATKKdVf/////AAABmb9SxtpqfUvxqCFmSowoT10see3Vz9mze+DVTbtqieMNjFxZverOpqc4OYMhAkuv9rnJMQZyuaweuLOXioXqVuYJ2P2yRohAKL//zPiF1drlPCUbzdhh3pFV8X4rnBILwoF9C3gWvpQfB//IJdZXNBkWYOZAp+UXGBW2WGdt2rQFHw4Y23GrGb2XCmPEHynO8tiNb6IzR6vOh/KOZ8GyTVES7+GyMVhFWNqgL969+ra6Ev5mgfDqaIt4DAqOoiMomDF9mm+Ixx7m6R2pwJC69XVvqAE6+fuotOs8fvA2XRtU+NNaD2ALR247keSC3qK0RnH8JGjYbSmiOHuRqHW9p9J/JrG1OPOxKnKuGEhhcgA7";
+    protected VuforiaLocalizer vuforia;
+    //TensorFlow Object detector
+    protected TFObjectDetector tfod;
+
     @Override
-    public void runOpMode(){
+    public void runOpMode() {
         robot = new Hardware(hardwareMap);
         //runtime = new ElapsedTime();
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
         //TODO Have to properly name the motors
-        leftFrontDrive  = hardwareMap.get(DcMotor.class, "leftfdrive");
+        leftFrontDrive = hardwareMap.get(DcMotor.class, "leftfdrive");
         rightFrontDrive = hardwareMap.get(DcMotor.class, "rightfdrive");
         leftBackDrive = hardwareMap.get(DcMotor.class, "leftbdrive");
         rightBackDrive = hardwareMap.get(DcMotor.class, "rightbdrive");
+
+        //TODO Have to properly name the camera
+        cameraName = hardwareMap.get(CameraName.class, "Webcam");
 
         //Set directions for motors
         leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
@@ -63,15 +80,57 @@ public class Autonomous extends LinearOpMode{
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
 
         waitForStart();
+        initTfod();
+        initVuforia();
+
+        while (!imu.isSystemCalibrated()) idle();
+
+        // Wait for the game to start (driver presses PLAY)
+        tfod.activate();
+        waitForStart();
+        if (!opModeIsActive()) return;
+
+        tfod.deactivate();
+
         runtime.reset();
 
-        //Need an Activity object here. Which file do we get this from?
-        tflite = new Interpreter(loadModelFile());
+        //TODO: Need an Activity object here. Which file do we get this from?
+        //tflite = new Interpreter(loadModelFile());
 
         //To run the model, we have to do tflite.run(imgData, labelProbArray);
         //I am thinking that, from the video we can take 10 fps and and analyze each image
         // in the frame to make the prediction.
     }
+
+    public void initTfod() {
+        int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
+                "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
+        tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
+
+        //INFO Load the model and the classes.
+        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, "");
+    }
+
+    /**
+     * Initialize the Vuforia localization engine.
+     */
+    protected void initVuforia() {
+        /*
+         * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
+         */
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
+
+        parameters.vuforiaLicenseKey = VUFORIA_KEY;
+//        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+        parameters.cameraName = cameraName;
+
+        //  Instantiate the Vuforia engine
+        vuforia = ClassFactory.getInstance().createVuforia(parameters);
+
+        // Loading trackables is not necessary for the Tensor Flow Object Detection engine.
+    }
+
 
     private MappedByteBuffer loadModelFile(Activity activity) throws IOException {
         //in openFd(), input the a String that points to the file in assets folder where .tflite file is
@@ -84,20 +143,19 @@ public class Autonomous extends LinearOpMode{
         return fileChannel.map(FileChannel.MapMode.READ_ONLY, startOffset, declaredLength);
     }
 
-    void waitAbsolute(double seconds)
-    {
+    void waitAbsolute(double seconds) {
         /*
-        * TODO Keep the robot waiting until a certain time is reached.
-        * */
+         * TODO Keep the robot waiting until a certain time is reached.
+         * */
     } //wait to move on to next step
 
-    void waitFor (double seconds){
+    void waitFor(double seconds) {
         //WaitAbsolute(getNewTime(seconds));
         //adds the seconds to the current time
     }
 
-    public void timeDrive(double angle, double time, double power){
-        angle = Math.toRadians(angle) - Math.PI/4;
+    public void timeDrive(double angle, double time, double power) {
+        angle = Math.toRadians(angle) - Math.PI / 4;
 
         //if opModeIsActive(), move the motors
         //for a certain time
