@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.res.AssetFileDescriptor;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
@@ -54,6 +55,7 @@ public class Autonomous extends LinearOpMode{
         rightFrontDrive = hardwareMap.get(DcMotor.class, "rightfdrive");
         leftBackDrive = hardwareMap.get(DcMotor.class, "leftbdrive");
         rightBackDrive = hardwareMap.get(DcMotor.class, "rightbdrive");
+
         //Set directions for motors
         leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
         rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
@@ -85,7 +87,7 @@ public class Autonomous extends LinearOpMode{
     void waitAbsolute(double seconds)
     {
         /*
-        *It keeps the robot waiting until a certain time is reached
+        * TODO Keep the robot waiting until a certain time is reached.
         * */
     } //wait to move on to next step
 
