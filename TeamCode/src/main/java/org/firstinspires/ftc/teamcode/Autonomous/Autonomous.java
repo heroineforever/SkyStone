@@ -5,6 +5,8 @@ import android.content.res.AssetFileDescriptor;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
@@ -32,12 +34,34 @@ public class Autonomous extends LinearOpMode{
     double globalAngle, power = 0.30, correction;
     double baseAngle;
 
+    private DcMotor leftFrontDrive = null;
+    private DcMotor rightFrontDrive = null;
+    private DcMotor leftBackDrive = null;
+    private DcMotor rightBackDrive = null;
+
+    private ElapsedTime runtime = new ElapsedTime();
     public Interpreter tflite;
 
     @Override
     public void runOpMode(){
         robot = new Hardware(hardwareMap);
         //runtime = new ElapsedTime();
+        telemetry.addData("Status", "Initialized");
+        telemetry.update();
+
+        //TODO Have to properly name the motors
+        leftFrontDrive  = hardwareMap.get(DcMotor.class, "leftfdrive");
+        rightFrontDrive = hardwareMap.get(DcMotor.class, "rightfdrive");
+        leftBackDrive = hardwareMap.get(DcMotor.class, "leftbdrive");
+        rightBackDrive = hardwareMap.get(DcMotor.class, "rightbdrive");
+        //Set directions for motors
+        leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
+        rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
+        leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
+        rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
+
+        waitForStart();
+        runtime.reset();
 
         //Need an Activity object here. Which file do we get this from?
         tflite = new Interpreter(loadModelFile());
