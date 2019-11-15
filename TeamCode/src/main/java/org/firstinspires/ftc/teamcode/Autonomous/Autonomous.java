@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.vuforia.Vuforia;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraName;
@@ -89,12 +90,15 @@ public class Autonomous extends LinearOpMode {
         tfod.activate();
         waitForStart();
         if (!opModeIsActive()) return;
+        //TODO Write function to run TFOD object on image and determine important position info.
 
         tfod.deactivate();
-
         runtime.reset();
 
-        //TODO: Need an Activity object here. Which file do we get this from?
+        //TODO Write code to move motors and perform the task based on result of TFOD classification.
+
+
+        //OLD: Need an Activity object here. Which file do we get this from?
         //tflite = new Interpreter(loadModelFile());
 
         //To run the model, we have to do tflite.run(imgData, labelProbArray);
@@ -109,6 +113,7 @@ public class Autonomous extends LinearOpMode {
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
 
         //INFO Load the model and the classes.
+        //TODO need to load the classes. I don't know the class names.
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, "");
     }
 
@@ -116,9 +121,8 @@ public class Autonomous extends LinearOpMode {
      * Initialize the Vuforia localization engine.
      */
     protected void initVuforia() {
-        /*
-         * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
-         */
+        //Configure Vuforia by creating a Parameter object, and passing it to the com.vuforia.Vuforia engine.
+
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
 
         parameters.vuforiaLicenseKey = VUFORIA_KEY;
@@ -127,12 +131,11 @@ public class Autonomous extends LinearOpMode {
 
         //  Instantiate the Vuforia engine
         vuforia = ClassFactory.getInstance().createVuforia(parameters);
-
-        // Loading trackables is not necessary for the Tensor Flow Object Detection engine.
     }
 
 
-    private MappedByteBuffer loadModelFile(Activity activity) throws IOException {
+    //README commented out below function for loading the Model's file.
+    /*private MappedByteBuffer loadModelFile(Activity activity) throws IOException {
         //in openFd(), input the a String that points to the file in assets folder where .tflite file is
         AssetFileDescriptor fileDescriptor = activity.getAssets().openFd();
         FileInputStream inputStream = new FileInputStream(fileDescriptor.getFileDescriptor());
@@ -141,7 +144,7 @@ public class Autonomous extends LinearOpMode {
         long startOffset = fileDescriptor.getStartOffset();
         long declaredLength = fileDescriptor.getDeclaredLength();
         return fileChannel.map(FileChannel.MapMode.READ_ONLY, startOffset, declaredLength);
-    }
+    }*/
 
     void waitAbsolute(double seconds) {
         /*
