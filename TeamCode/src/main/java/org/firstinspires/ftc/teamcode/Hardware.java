@@ -43,6 +43,7 @@ public class Hardware{
         leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        arm.setDirection(Servo.Direction.FORWARD);
         //horizontalLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         //verticalLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
