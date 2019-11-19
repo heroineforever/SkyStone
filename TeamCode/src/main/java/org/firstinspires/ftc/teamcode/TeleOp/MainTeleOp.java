@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode.Hardware;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.vuforia.Vuforia;
 
 import java.lang.Math;
 
@@ -21,6 +22,7 @@ import java.lang.Math;
 //.getCurrentPosition(), retrieves encoder values, getPosition() for servo
 //gamepad1.left_trigger and such are scaled 0-1
 //.getMode()
+
 
 public class MainTeleOp extends OpMode {
 
@@ -47,17 +49,18 @@ public class MainTeleOp extends OpMode {
         DriveControl();
         //HorizontalLiftControl();
         //VerticalLiftControl();
+        //telemetry.addData("Left Drive Position", robot.leftBack.getCurrentPosition());
+        //telemetry.addData("Right Drive Position", robot.rightBack.getCurrentPosition());
 
-        //telemetry.addData("Left Drive Position", robot.leftDrive.getCurrentPosition());
-        //telemetry.addData("Right Drive Position", robot.rightDrive.getCurrentPosition());
+        telemetry.addData("Left Back Power", robot.leftBack.getPower());
+        telemetry.addData("Left Front Power", robot.leftFront.getPower());
+        telemetry.addData("Right Back Power", robot.rightBack.getPower());
+        telemetry.addData("Right Front Power", robot.rightFront.getPower());
 
-        telemetry.addData("Left Drive Power", robot.leftDrive.getPower());
-        telemetry.addData("Right Drive Power", robot.rightDrive.getPower());
         telemetry.addData("Left JoyStick Y", gamepad1.left_stick_y);
         telemetry.addData("Right JoyStick X", gamepad1.right_stick_x);
 
         //telemetry.addData("bucket position", robot.scoopServo.getPosition());
-
         telemetry.update();
     }
 
@@ -68,38 +71,35 @@ public class MainTeleOp extends OpMode {
         turn = gamepad1.right_stick_x;
         //joystick ranges -1 to 1
         if (turn == 0) {
-            robot.rightDrive.setPower(movement);
-            robot.leftDrive.setPower(movement);
+            robot.rightBack.setPower(movement);
+            robot.leftBack.setPower(movement);
         } else if (movement == 0) {
             if (turn > 0) {
-                robot.leftDrive.setPower(turn * -1);
-                robot.rightDrive.setPower(0);
+                robot.leftBack.setPower(turn * -1);
+                robot.rightBack.setPower(0);
             } else {
-                robot.leftDrive.setPower(0);
-                robot.rightDrive.setPower(turn);
+                robot.leftBack.setPower(0);
+                robot.rightBack.setPower(turn);
             }
-            //  robot.leftDrive.setPower(turn * -1);
-            // robot.rightDrive.setPower(turn);
+            //  robot.leftBack.setPower(turn * -1);
+            // robot.rightBack.setPower(turn);
         } else if (turn < 0) {
             if (movement > 0) {
-                robot.rightDrive.setPower(Math.abs(turn) / 4);
-                robot.leftDrive.setPower(turn * movement);
+                robot.rightBack.setPower(Math.abs(turn) / 4);
+                robot.leftBack.setPower(turn * movement);
             } else {
-                robot.rightDrive.setPower(turn * -1 * movement);
-                robot.leftDrive.setPower(Math.abs(turn) / 4);
+                robot.rightBack.setPower(turn * -1 * movement);
+                robot.leftBack.setPower(Math.abs(turn) / 4);
             }
         } else {
             if (movement > 0) {
-                robot.rightDrive.setPower(turn * -1 * movement);
-                robot.leftDrive.setPower(Math.abs(turn) / 4);
+                robot.rightBack.setPower(turn * -1 * movement);
+                robot.leftBack.setPower(Math.abs(turn) / 4);
             } else {
-                robot.rightDrive.setPower(Math.abs(turn) / 4);
-                robot.leftDrive.setPower(turn * movement);
+                robot.rightBack.setPower(Math.abs(turn) / 4);
+                robot.leftBack.setPower(turn * movement);
             }
-
         }
-
-
     }
 
 
