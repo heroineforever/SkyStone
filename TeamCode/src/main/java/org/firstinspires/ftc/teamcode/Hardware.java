@@ -38,7 +38,6 @@ public class Hardware{
 
     //General Methods
     public void resetDriveEncoders() {
-
         leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);//reset
         leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

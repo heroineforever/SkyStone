@@ -31,8 +31,8 @@ public class MainTeleOp extends OpMode {
     Hardware robot;
     //private ElaspedTime runTime; for if you need to drive by time
     double movement;
-    double turn;
-
+    double rotation;
+    double strafe;
 
     @Override
     //initialize
@@ -68,38 +68,43 @@ public class MainTeleOp extends OpMode {
     public void DriveControl() {
         //got the direction from the controller then told the motors what to do
         movement = gamepad1.left_stick_y;
-        turn = gamepad1.right_stick_x;
-        //joystick ranges -1 to 1
-        if (turn == 0) {
+        rotation = gamepad1.right_stick_x;
+        strafe = gamepad1.left_stick_x;
+        //INFO joystick ranges -1 to 1
+
+
+
+
+        /*if (rotation == 0) {
             robot.rightBack.setPower(movement);
             robot.leftBack.setPower(movement);
         } else if (movement == 0) {
-            if (turn > 0) {
-                robot.leftBack.setPower(turn * -1);
+            if (rotation > 0) {
+                robot.leftBack.setPower(rotation * -1);
                 robot.rightBack.setPower(0);
             } else {
                 robot.leftBack.setPower(0);
-                robot.rightBack.setPower(turn);
+                robot.rightBack.setPower(rotation);
             }
-            //  robot.leftBack.setPower(turn * -1);
-            // robot.rightBack.setPower(turn);
-        } else if (turn < 0) {
+            //  robot.leftBack.setPower(rotation * -1);
+            // robot.rightBack.setPower(rotation);
+        } else if (rotation < 0) {
             if (movement > 0) {
-                robot.rightBack.setPower(Math.abs(turn) / 4);
-                robot.leftBack.setPower(turn * movement);
+                robot.rightBack.setPower(Math.abs(rotation) / 4);
+                robot.leftBack.setPower(rotation * movement);
             } else {
-                robot.rightBack.setPower(turn * -1 * movement);
-                robot.leftBack.setPower(Math.abs(turn) / 4);
+                robot.rightBack.setPower(rotation * -1 * movement);
+                robot.leftBack.setPower(Math.abs(rotation) / 4);
             }
         } else {
             if (movement > 0) {
-                robot.rightBack.setPower(turn * -1 * movement);
-                robot.leftBack.setPower(Math.abs(turn) / 4);
+                robot.rightBack.setPower(rotation * -1 * movement);
+                robot.leftBack.setPower(Math.abs(rotation) / 4);
             } else {
-                robot.rightBack.setPower(Math.abs(turn) / 4);
-                robot.leftBack.setPower(turn * movement);
+                robot.rightBack.setPower(Math.abs(rotation) / 4);
+                robot.leftBack.setPower(rotation * movement);
             }
-        }
+        }*/
     }
 
 
