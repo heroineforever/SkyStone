@@ -18,6 +18,7 @@ public class Hardware{
     public Hardware(HardwareMap hwmp) {
         //Assign all motors/servos to the spots on the phone
 
+        //INFO. Just change the name of the motor.
         //Motors
         leftFront = hwmp.dcMotor.get("Left Front");
         rightFront = hwmp.dcMotor.get("Right Front");
@@ -32,7 +33,6 @@ public class Hardware{
 
         //Servos
         //liftServo = hwmp.servo.get("Lift Servo");
-asdf
 
     }
 
