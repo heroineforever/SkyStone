@@ -83,10 +83,10 @@ public class MainTeleOp extends OpMode {
         double power = Math.hypot(x1, y1);
         double angle = Math.atan2(y1, x1) - Math.PI/4;
 
-        robot.leftBack.setPower(power * Math.cos(angle) + x2));
-        robot.leftFront.setPower(power * Math.sin(angle) - x2));
-        robot.rightFront.setPower(power * Math.sin(angle) + x2));
-        robot.rightBack.setPower(power * Math.cos(angle) - x2));
+        robot.leftBack.setPower(power * Math.cos(angle) + x2);
+        robot.leftFront.setPower(power * Math.sin(angle) - x2);
+        robot.rightFront.setPower(power * Math.sin(angle) + x2);
+        robot.rightBack.setPower(power * Math.cos(angle) - x2);
 
 
 
@@ -153,7 +153,7 @@ public class MainTeleOp extends OpMode {
         if (gamepad1.y){
 
             robot.arm.setPosition(Servo.MIN_POSITION);
-/*
+
         }
     }
 
