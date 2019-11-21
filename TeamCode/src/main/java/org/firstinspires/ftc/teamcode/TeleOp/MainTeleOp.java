@@ -33,12 +33,17 @@ public class MainTeleOp extends OpMode {
     double movement;
     double rotation;
     double strafe;
+    DcMotor leftFront, rightFront, leftBack, rightBack;
 
     @Override
     //initialize
     public void init() {
         //map hardware
         robot = new Hardware(hardwareMap);
+        leftFront = robot.leftFront;
+        rightFront = robot.rightFront;
+        rightBack = robot.rightBack;
+        leftBack = robot.leftBack;
 
         //ElapsedTime runtime = new ElapsedTime();
     }
@@ -75,18 +80,18 @@ public class MainTeleOp extends OpMode {
         //INFO joystick ranges -1 to 1
 
 
-        double x1 = gamepad1.left_stick_x;
-        double y1 = -gamepad1.left_stick_y;
-        double x2 = gamepad1.right_stick_x;
+        double magnitude = Math.sqrt(Math.pow(gamepad1.left_stick_x, 2) + Math.pow(gamepad1.left_stick_y, 2));
+        double direction = Math.atan2(-gamepad1.left_stick_x, gamepad1.left_stick_y);
+        double rotation = -gamepad1.right_stick_x;
 
         //trig implementation
         double power = Math.hypot(x1, y1);
         double angle = Math.atan2(y1, x1) - Math.PI/4;
 
-        robot.leftBack.setPower(power * Math.cos(angle) + x2);
-        robot.leftFront.setPower(power * Math.sin(angle) - x2);
-        robot.rightFront.setPower(power * Math.sin(angle) + x2);
-        robot.rightBack.setPower(power * Math.cos(angle) - x2);
+        leftFront.setPower(magnitude * Math.sin(direction + Math.PI/4) + rotation);
+        leftBack.setPower(magnitude * Math.cos(direction + Math.PI/4) + rotation);
+        rightFront.setPower(magnitude * Math.cos(direction + Math.PI/4) - rotation);
+        rightBack.setPower(magnitude * Math.sin(direction + Math.PI/4) - rotation);
 
 
 
