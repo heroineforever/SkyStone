@@ -11,7 +11,7 @@ public class Hardware{
     public DcMotor leftFront, rightFront, rightBack, leftBack;
     public Servo arm;
 
-    public DcMotor horizontalLift, verticalLift;
+    //public DcMotor horizontalLift, verticalLift;
 
 
     //Constructor
@@ -24,15 +24,17 @@ public class Hardware{
         rightFront = hwmp.dcMotor.get("Right Front");
         rightBack = hwmp.dcMotor.get("Right Back");
         leftBack = hwmp.dcMotor.get("Left Back");
-        arm = hwmp.servo.get("Arm");
         //horizontalLift = hwmp.dcMotor.get("Horizontal Lift");
         //verticalLift = hwmp.dcMotor.get("Vertical Left");
 
         //INFO If you want to put the motor flipped
         //rightDrive.setDirection(DcMotor.Direction.REVERSE);
+        rightFront.setDirection(DcMotor.Direction.REVERSE);
+        rightBack.setDirection(DcMotor.Direction.REVERSE);
 
         //Servos
         //liftServo = hwmp.servo.get("Lift Servo");
+        arm = hwmp.servo.get("Arm");
 
     }
 
@@ -59,6 +61,7 @@ public class Hardware{
         rightFront.setPower(0);
         rightBack.setPower(0);
         leftBack.setPower(0);
+        arm.setPosition(0);
         //verticalLift.setPower(0);
         //horizontalLift.setPower(0);
     }

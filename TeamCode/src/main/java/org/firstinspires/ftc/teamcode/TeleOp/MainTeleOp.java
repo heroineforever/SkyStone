@@ -47,6 +47,7 @@ public class MainTeleOp extends OpMode {
     @Override
     public void loop() {
         DriveControl();
+        ArmControl();
         //HorizontalLiftControl();
         //VerticalLiftControl();
         //telemetry.addData("Left Drive Position", robot.leftBack.getCurrentPosition());
@@ -60,7 +61,8 @@ public class MainTeleOp extends OpMode {
         telemetry.addData("Left JoyStick Y", gamepad1.left_stick_y);
         telemetry.addData("Right JoyStick X", gamepad1.right_stick_x);
 
-        //telemetry.addData("bucket position", robot.scoopServo.getPosition());
+        telemetry.addData("Arm Position", robot.arm.getPosition());
+
         telemetry.update();
     }
 
@@ -72,6 +74,19 @@ public class MainTeleOp extends OpMode {
         strafe = gamepad1.left_stick_x;
         //INFO joystick ranges -1 to 1
 
+
+        double x1 = gamepad1.left_stick_x;
+        double y1 = -gamepad1.left_stick_y;
+        double x2 = gamepad1.right_stick_x;
+
+        //trig implementation
+        double power = Math.hypot(x1, y1);
+        double angle = Math.atan2(y1, x1) - Math.PI/4;
+
+        robot.leftBack.setPower(power * Math.cos(angle) + x2));
+        robot.leftFront.setPower(power * Math.sin(angle) - x2));
+        robot.rightFront.setPower(power * Math.sin(angle) + x2));
+        robot.rightBack.setPower(power * Math.cos(angle) - x2));
 
 
 
@@ -127,5 +142,20 @@ public class MainTeleOp extends OpMode {
         else
             robot.verticalLift.setPower(0);
     }*/
+
+    public void ArmControl()
+    {
+        if (gamepad1.x){
+            robot.arm.setPosition(Servo.MAX_POSITION);
+
+        }
+
+        if (gamepad1.y){
+
+            robot.arm.setPosition(Servo.MIN_POSITION);
+/*
+        }
+    }
+
 
 }
