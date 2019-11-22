@@ -74,26 +74,13 @@ public class MainTeleOp extends OpMode {
     //Driving Control function
     public void DriveControl() {
         //got the direction from the controller then told the motors what to do
-        movement = gamepad1.left_stick_y;
+        /*movement = gamepad1.left_stick_y;
         rotation = gamepad1.right_stick_x;
-        strafe = gamepad1.left_stick_x;
+        strafe = gamepad1.left_stick_x;*/
         //INFO joystick ranges -1 to 1
 
-
-        double magnitude = Math.sqrt(Math.pow(gamepad1.left_stick_x, 2) + Math.pow(gamepad1.left_stick_y, 2));
-        double direction = Math.atan2(-gamepad1.left_stick_x, gamepad1.left_stick_y);
-        double rotation = -gamepad1.right_stick_x;
-
-        //trig implementation
-        double power = Math.hypot(x1, y1);
-        double angle = Math.atan2(y1, x1) - Math.PI/4;
-
-        leftFront.setPower(magnitude * Math.sin(direction + Math.PI/4) + rotation);
-        leftBack.setPower(magnitude * Math.cos(direction + Math.PI/4) + rotation);
-        rightFront.setPower(magnitude * Math.cos(direction + Math.PI/4) - rotation);
-        rightBack.setPower(magnitude * Math.sin(direction + Math.PI/4) - rotation);
-
-
+        //approachOne();
+        IJApproach();
 
         /*if (rotation == 0) {
             robot.rightBack.setPower(movement);
@@ -127,6 +114,59 @@ public class MainTeleOp extends OpMode {
         }*/
     }
 
+    private void IJApproach() {
+        //INFO vertical, rotate, sideways
+        movement = gamepad1.left_stick_y;
+        rotation = gamepad1.right_stick_x;
+        strafe = gamepad1.left_stick_x;
+
+        double x = strafe;
+        double y = movement;
+        double hypot = Math.hypot(x, y);
+
+        double max = Math.max(Math.abs(x), Math.abs(y));
+        double ratio = hypot / max;
+        //INFO Scale it up to make one side 1 or -1.
+        x *= ratio;
+        y *= ratio;
+
+        //INFO a and b are the values for the motors eventuall.
+        //  a is for the right top. b is for top left.
+        double b = 0, a = 0;
+        b = (x + y) / 2;
+        a = x - b;
+
+        double secondRatio = hypot / (Math.max(Math.abs(a), Math.abs(b)));
+        a *= secondRatio;
+        b *= secondRatio;
+        //README right now a is opposite of what it should be.
+        a*=-1;
+
+        //README I have not yet accounted for rotation.
+        leftFront.setPower(b);
+        rightBack.setPower(b);
+        rightFront.setPower(a);
+        leftBack.setPower(a);
+    }
+
+    private void approachOne() {
+        movement = gamepad1.left_stick_y;
+        rotation = gamepad1.right_stick_x;
+        strafe = gamepad1.left_stick_x;
+        double magnitude = Math.sqrt(Math.pow(gamepad1.left_stick_x, 2) + Math.pow(gamepad1.left_stick_y, 2));
+        double direction = Math.atan2(-gamepad1.left_stick_x, gamepad1.left_stick_y);
+        double rotation = -gamepad1.right_stick_x;
+
+        //trig implementation
+        //double power = Math.hypot(x1, y1);
+        //double angle = Math.atan2(y1, x1) - Math.PI/4;
+
+        leftFront.setPower(magnitude * Math.sin(direction + Math.PI / 4) + rotation);
+        leftBack.setPower(magnitude * Math.cos(direction + Math.PI / 4) + rotation);
+        rightFront.setPower(magnitude * Math.cos(direction + Math.PI / 4) - rotation);
+        rightBack.setPower(magnitude * Math.sin(direction + Math.PI / 4) - rotation);
+    }
+
 
     //Function for handling horizontal lift
     /*public void HorizontalLiftControl() {
@@ -148,14 +188,13 @@ public class MainTeleOp extends OpMode {
             robot.verticalLift.setPower(0);
     }*/
 
-    public void ArmControl()
-    {
-        if (gamepad1.x){
+    public void ArmControl() {
+        if (gamepad1.x) {
             robot.arm.setPosition(Servo.MAX_POSITION);
 
         }
 
-        if (gamepad1.y){
+        if (gamepad1.y) {
 
             robot.arm.setPosition(Servo.MIN_POSITION);
 
