@@ -126,11 +126,11 @@ public class MainTeleOp extends OpMode {
 
         double max = Math.max(Math.abs(x), Math.abs(y));
         double ratio = hypot / max;
-        //INFO Scale it up to make one side 1 or -1.
+        //README Scale it up to make one side 1 or -1.
         x *= ratio;
         y *= ratio;
 
-        //INFO a and b are the values for the motors eventuall.
+        //README a and b are the values for the motors eventuall.
         //  a is for the right top. b is for top left.
         double b = 0, a = 0;
         b = (x + y) / 2;
@@ -140,13 +140,37 @@ public class MainTeleOp extends OpMode {
         a *= secondRatio;
         b *= secondRatio;
         //README right now a is opposite of what it should be.
-        a*=-1;
+        a *= -1;
 
-        //README I have not yet accounted for rotation.
-        leftFront.setPower(b);
-        rightBack.setPower(b);
-        rightFront.setPower(a);
-        leftBack.setPower(a);
+        if (rotation > 0) {
+            //INFO If rotation is positive, then have to move top left forward and bottom right backward.
+            double topLeft = b, bottomRight = b;
+            topLeft = Math.max(b * rotation, b * rotation + 0.15f);
+            bottomRight = Math.max(b * rotation, b * rotation + 0.15f);
+
+            leftFront.setPower(topLeft);
+            rightBack.setPower(bottomRight*-1);
+            rightFront.setPower(a);
+            leftBack.setPower(a);
+
+        } else if (rotation < 0) {
+            //INFO If rotation is negative, then have to move top right forward and bottom left backward.
+            double topRight = a, bottomLeft = a;
+            rotation *= -1;
+            topRight = Math.max(a * rotation, a * rotation + 0.15f);
+            bottomLeft = Math.max(a * rotation, a * rotation + 0.15f);
+
+            leftFront.setPower(b);
+            rightBack.setPower(b);
+            rightFront.setPower(topRight);
+            leftBack.setPower(bottomLeft*-1);
+        } else {
+            leftFront.setPower(b);
+            rightBack.setPower(b);
+            rightFront.setPower(a);
+            leftBack.setPower(a);
+        }
+
     }
 
     private void approachOne() {
