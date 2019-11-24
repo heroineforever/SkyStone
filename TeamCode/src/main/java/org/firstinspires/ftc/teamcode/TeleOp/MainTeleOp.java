@@ -149,7 +149,7 @@ public class MainTeleOp extends OpMode {
             bottomRight = Math.max(b * rotation, b * rotation + 0.15f);
 
             leftFront.setPower(topLeft);
-            rightBack.setPower(bottomRight*-1);
+            rightBack.setPower(bottomRight * -1);
             rightFront.setPower(a);
             leftBack.setPower(a);
 
@@ -163,7 +163,7 @@ public class MainTeleOp extends OpMode {
             leftFront.setPower(b);
             rightBack.setPower(b);
             rightFront.setPower(topRight);
-            leftBack.setPower(bottomLeft*-1);
+            leftBack.setPower(bottomLeft * -1);
         } else {
             leftFront.setPower(b);
             rightBack.setPower(b);
@@ -212,16 +212,15 @@ public class MainTeleOp extends OpMode {
             robot.verticalLift.setPower(0);
     }*/
 
+    boolean up = true;
+
     public void ArmControl() {
         if (gamepad1.x) {
-            robot.arm.setPosition(Servo.MAX_POSITION);
-
-        }
-
-        if (gamepad1.y) {
-
-            robot.arm.setPosition(Servo.MIN_POSITION);
-
+            if (up)
+                robot.arm.setPosition(Servo.MAX_POSITION);
+            if (!up)
+                robot.arm.setPosition(Servo.MIN_POSITION);
+            up ^= up;
         }
     }
 
