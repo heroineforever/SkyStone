@@ -15,7 +15,7 @@ import com.vuforia.Vuforia;
 import java.lang.Math;
 
 
-@TeleOp(name = "Test TeleOp", group = "Linear Opmode")
+@TeleOp(name = "Testing TeleOp", group = "Linear Opmode")
 //@Disabled
 //robot.motor.setPower(numerical value);
 //encoders are doubles
@@ -114,6 +114,7 @@ public class MainTeleOp extends OpMode {
         }*/
     }
 
+    //INFO This works too, but rotation is very slow.
     private void IJApproach() {
         //INFO IJ Approach works, but everything is rotated 90 degrees.
         movement = gamepad1.left_stick_y;
@@ -185,24 +186,26 @@ public class MainTeleOp extends OpMode {
         //double angle = Math.atan2(y1, x1) - Math.PI/4;
 
         //INFO Increasing speed to maximum of 1
+        double lf = magnitude * Math.sin(direction + Math.PI / 4) - rotation;
+        double lb = magnitude * Math.cos(direction + Math.PI / 4) - rotation;
+        double rf = magnitude * Math.cos(direction + Math.PI / 4) + rotation;
+        double rb = magnitude * Math.sin(direction + Math.PI / 4) + rotation;
         double hypot = Math.hypot(movement, strafe);
+        double ratio;
+        if (movement == 0 && strafe == 0)
+            ratio = 1;
+        else
+            ratio = hypot / (Math.max(Math.max(Math.max(Math.abs(lf), Math.abs(lb)), Math.abs(rb)), Math.abs(rf)));
 
-        // double lf = magnitude * Math.sin(direction + Math.PI / 4) + rotation;
-        //        double lb = magnitude * Math.cos(direction + Math.PI / 4) + rotation;
-        //        double rf = magnitude * Math.cos(direction + Math.PI / 4) - rotation;
-        //        double rb = magnitude * Math.sin(direction + Math.PI / 4) - rotation;
-        //        double hypot = Math.hypot(movement, strafe);
-        //        double ratio = hypot/(Math.max(Math.max(Math.max(lf, lb),rb),rf));
-        //
-        //        leftFront.setPower(ratio *lf);
-        //        leftBack.setPower(ratio *lb);
-        //        rightFront.setPower(ratio*rf);
-        //        rightBack.setPower(ratio*rb);
+        leftFront.setPower(ratio * lf);
+        leftBack.setPower(ratio * lb);
+        rightFront.setPower(ratio * rf);
+        rightBack.setPower(ratio * rb);
 
-        leftFront.setPower(magnitude * Math.sin(direction + Math.PI / 4) + rotation);
-        leftBack.setPower(magnitude * Math.cos(direction + Math.PI / 4) + rotation);
-        rightFront.setPower(magnitude * Math.cos(direction + Math.PI / 4) - rotation);
-        rightBack.setPower(magnitude * Math.sin(direction + Math.PI / 4) - rotation);
+        /*leftFront.setPower((magnitude * Math.sin(direction + Math.PI / 4) + rotation)*-1);
+        leftBack.setPower((magnitude * Math.cos(direction + Math.PI / 4) + rotation)*-1);
+        rightFront.setPower((magnitude * Math.cos(direction + Math.PI / 4) - rotation)*-1);
+        rightBack.setPower((magnitude * Math.sin(direction + Math.PI / 4) - rotation)*-1);*/
     }
 
 
@@ -231,16 +234,12 @@ public class MainTeleOp extends OpMode {
 
     public void ArmControl() {
         if (gamepad1.x) {
-            if (up) {
-                robot.arm.setPosition(Servo.MIN_POSITION);
-                up = false;
-            }
-            if (!up) {
-                robot.arm.setPosition(Servo.MAX_POSITION);
-                up = true;
-            }
+            robot.arm.setPosition(Servo.MAX_POSITION);
+            robot.arm.setPosition(Servo.MAX_POSITION);
+        }
+        if (gamepad1.y) {
+            robot.arm.setPosition(Servo.MIN_POSITION);
+            robot.arm.setPosition(Servo.MIN_POSITION);
         }
     }
-
-
 }
