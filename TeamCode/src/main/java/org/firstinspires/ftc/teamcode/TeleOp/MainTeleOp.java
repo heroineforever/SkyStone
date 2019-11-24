@@ -66,7 +66,7 @@ public class MainTeleOp extends OpMode {
         telemetry.addData("Left JoyStick Y", gamepad1.left_stick_y);
         telemetry.addData("Right JoyStick X", gamepad1.right_stick_x);
 
-        telemetry.addData("Arm Position", robot.arm.getPosition());
+        //telemetry.addData("Arm Position", robot.arm.getPosition());
 
         telemetry.update();
     }
