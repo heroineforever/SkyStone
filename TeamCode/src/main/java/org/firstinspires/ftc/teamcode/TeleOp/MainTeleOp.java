@@ -15,7 +15,7 @@ import com.vuforia.Vuforia;
 import java.lang.Math;
 
 
-@TeleOp(name = "Main TeleOp", group = "Linear Opmode")
+@TeleOp(name = "Test TeleOp", group = "Linear Opmode")
 //@Disabled
 //robot.motor.setPower(numerical value);
 //encoders are doubles
@@ -79,8 +79,8 @@ public class MainTeleOp extends OpMode {
         strafe = gamepad1.left_stick_x;*/
         //INFO joystick ranges -1 to 1
 
-        //approachOne();
-        IJApproach();
+        approachOne();
+        //IJApproach();
 
         /*if (rotation == 0) {
             robot.rightBack.setPower(movement);
@@ -115,7 +115,7 @@ public class MainTeleOp extends OpMode {
     }
 
     private void IJApproach() {
-        //INFO vertical, rotate, sideways
+        //INFO IJ Approach works, but everything is rotated 90 degrees.
         movement = gamepad1.left_stick_y;
         rotation = gamepad1.right_stick_x;
         strafe = gamepad1.left_stick_x;
@@ -141,20 +141,19 @@ public class MainTeleOp extends OpMode {
         b *= secondRatio;
         //README right now a is opposite of what it should be.
         a *= -1;
-
         if (rotation > 0) {
-            //INFO If rotation is positive, then have to move top left forward and bottom right backward.
+            // If rotation is positive, then have to move top left forward and bottom right backward.
             double topLeft = b, bottomRight = b;
             topLeft = Math.max(b * rotation, b * rotation + 0.15f);
             bottomRight = Math.max(b * rotation, b * rotation + 0.15f);
 
-            leftFront.setPower(topLeft);
-            rightBack.setPower(bottomRight * -1);
-            rightFront.setPower(a);
-            leftBack.setPower(a);
+            leftFront.setPower(Math.sin(topLeft + Math.PI / 4));
+            rightBack.setPower(Math.cos(bottomRight * -1 + Math.PI / 4));
+            rightFront.setPower(Math.sin(a + Math.PI / 4));
+            leftBack.setPower(Math.cos(a + Math.PI / 4));
 
         } else if (rotation < 0) {
-            //INFO If rotation is negative, then have to move top right forward and bottom left backward.
+            // If rotation is negative, then have to move top right forward and bottom left backward.
             double topRight = a, bottomLeft = a;
             rotation *= -1;
             topRight = Math.max(a * rotation, a * rotation + 0.15f);
@@ -185,6 +184,21 @@ public class MainTeleOp extends OpMode {
         //double power = Math.hypot(x1, y1);
         //double angle = Math.atan2(y1, x1) - Math.PI/4;
 
+        //INFO Increasing speed to maximum of 1
+        double hypot = Math.hypot(movement, strafe);
+
+        // double lf = magnitude * Math.sin(direction + Math.PI / 4) + rotation;
+        //        double lb = magnitude * Math.cos(direction + Math.PI / 4) + rotation;
+        //        double rf = magnitude * Math.cos(direction + Math.PI / 4) - rotation;
+        //        double rb = magnitude * Math.sin(direction + Math.PI / 4) - rotation;
+        //        double hypot = Math.hypot(movement, strafe);
+        //        double ratio = hypot/(Math.max(Math.max(Math.max(lf, lb),rb),rf));
+        //
+        //        leftFront.setPower(ratio *lf);
+        //        leftBack.setPower(ratio *lb);
+        //        rightFront.setPower(ratio*rf);
+        //        rightBack.setPower(ratio*rb);
+
         leftFront.setPower(magnitude * Math.sin(direction + Math.PI / 4) + rotation);
         leftBack.setPower(magnitude * Math.cos(direction + Math.PI / 4) + rotation);
         rightFront.setPower(magnitude * Math.cos(direction + Math.PI / 4) - rotation);
@@ -194,6 +208,7 @@ public class MainTeleOp extends OpMode {
 
     //Function for handling horizontal lift
     /*public void HorizontalLiftControl() {
+
         if (gamepad1.dpad_left)
             robot.horizontalLift.setPower(-.7);
         else if (gamepad1.dpad_right)
@@ -216,11 +231,14 @@ public class MainTeleOp extends OpMode {
 
     public void ArmControl() {
         if (gamepad1.x) {
-            if (up)
-                robot.arm.setPosition(Servo.MAX_POSITION);
-            if (!up)
+            if (up) {
                 robot.arm.setPosition(Servo.MIN_POSITION);
-            up ^= up;
+                up = false;
+            }
+            if (!up) {
+                robot.arm.setPosition(Servo.MAX_POSITION);
+                up = true;
+            }
         }
     }
 
