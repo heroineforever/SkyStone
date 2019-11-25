@@ -131,7 +131,7 @@ public class MainTeleOp extends OpMode {
         x *= ratio;
         y *= ratio;
 
-        //README a and b are the values for the motors eventuall.
+        //README a and b are the values for the motors eventually.
         //  a is for the right top. b is for top left.
         double b = 0, a = 0;
         b = (x + y) / 2;
