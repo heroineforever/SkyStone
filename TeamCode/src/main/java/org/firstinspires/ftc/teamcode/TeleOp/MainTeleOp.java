@@ -224,15 +224,19 @@ public class MainTeleOp extends OpMode {
         robot.verticalIntake.setPower(vertical);
 
         //README Suction wheels
-        robot.greenWheelLeft.setPower((gamepad2.y) ? -1 : 0);
-        robot.greenWheelRight.setPower((gamepad2.y) ? -1 : 0);
-
-        //README Gate open/close using triggers and constriction.
         double rt = gamepad2.right_trigger;
         double lt = gamepad2.left_trigger;
-
-        //INFO Do constriction and close gate.
         if(rt > 0.2) {
+            robot.greenWheelLeft.setPower(rt);
+            robot.greenWheelRight.setPower(rt);
+        }else if(lt > 0.2){
+            robot.greenWheelLeft.setPower(lt);
+            robot.greenWheelRight.setPower(lt);
+        }
+
+        //README Gate open/close using triggers and constriction.
+        //INFO Do constriction and close gate.
+        if(gamepad2.y) {
             robot.gate.setPosition(1);
             //Delay 0.8 second
             Handler h = new Handler();
@@ -245,7 +249,7 @@ public class MainTeleOp extends OpMode {
             };
             h.postDelayed(r, 800);
         } //INFO Undo constriction and open gate.
-        else if (lt > 0.2) {
+        else if (gamepad2.x) {
             robot.gate.setPosition(0);
             //Delay 0.8 second
             Handler h = new Handler();
