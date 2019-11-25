@@ -53,10 +53,11 @@ import java.lang.Math;
 
 @Autonomous(name = "Testing Autonomous", group = "Autonomous")
 
-public class SecondSkystone extends LinearOpMode {
+public class SecondSkystone extends org.firstinspires.ftc.teamcode.Autonomous.Autonomous {
 
     @Override
     public void runOpMode() {
+
         //Strafe right 1 second.
         //Move forward 1/2 second
         //Lower the arm
@@ -69,6 +70,7 @@ public class SecondSkystone extends LinearOpMode {
         //Strafe left .2
         //Go back 1.5
         //Forward .5
+
 
 
         //use methods from autonomous to command the robot
