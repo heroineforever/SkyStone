@@ -36,6 +36,7 @@ public class MainTeleOp extends OpMode {
     double rotation;
     double strafe;
     DcMotor leftFront, rightFront, leftBack, rightBack;
+    Servo arm;
 
 
     @Override
@@ -47,6 +48,9 @@ public class MainTeleOp extends OpMode {
         rightFront = robot.rightFront;
         rightBack = robot.rightBack;
         leftBack = robot.leftBack;
+        arm = robot.arm;
+
+        arm.setPosition(Servo.MIN_POSITION);
 
         //ElapsedTime runtime = new ElapsedTime();
     }
@@ -56,7 +60,7 @@ public class MainTeleOp extends OpMode {
     public void loop() {
         DriveControl();
         ArmControl();
-        LiftControl();
+        //LiftControl();
         //HorizontalLiftControl();
         //VerticalLiftControl();
         //telemetry.addData("Left Drive Position", robot.leftBack.getCurrentPosition());
@@ -183,7 +187,7 @@ public class MainTeleOp extends OpMode {
         strafe = gamepad1.left_stick_x;
         double magnitude = Math.sqrt(Math.pow(gamepad1.left_stick_x, 2) + Math.pow(gamepad1.left_stick_y, 2));
         double direction = Math.atan2(-gamepad1.left_stick_x, gamepad1.left_stick_y);
-        double rotation = -gamepad1.right_stick_x;
+        double rotation = gamepad1.right_stick_x;
 
         //trig implementation
         //double power = Math.hypot(x1, y1);
@@ -214,7 +218,7 @@ public class MainTeleOp extends OpMode {
 
 
     //Function for handling horizontal lift
-    public void LiftControl() {
+    /*public void LiftControl() {
 
         double vertical = gamepad2.left_stick_y;
         double horizontal = gamepad2.right_stick_y;
@@ -232,7 +236,7 @@ public class MainTeleOp extends OpMode {
         double lt = gamepad2.left_trigger;
 
         //INFO Do constriction and close gate.
-        if(rt > 0.2) {
+        if (rt > 0.2) {
             robot.gate.setPosition(1);
             //Delay 0.8 second
             Handler h = new Handler();
@@ -268,8 +272,8 @@ public class MainTeleOp extends OpMode {
         else if (gamepad1.dpad_right)
             robot.horizontalLift.setPower(.7);
         else
-            robot.horizontalLift.setPower(0);*/
-    }
+            robot.horizontalLift.setPower(0);
+    }*/
 
     //Function for handling vertical lift
     /*public void VerticalLiftControl(){
@@ -284,13 +288,11 @@ public class MainTeleOp extends OpMode {
     boolean up = true;
 
     public void ArmControl() {
-        if (up) {
-            robot.arm.setPosition(Servo.MIN_POSITION);
-            up = false;
-        } else {
-            robot.arm.setPosition(Servo.MAX_POSITION);
-            up = true;
-        }
+        if(gamepad1.x)
+            arm.setPosition(Servo.MAX_POSITION);
+        if(gamepad1.y)
+            arm.setPosition(Servo.MIN_POSITION);
+
 
         /*if (gamepad1.x) {
             robot.arm.setPosition(Servo.MAX_POSITION);

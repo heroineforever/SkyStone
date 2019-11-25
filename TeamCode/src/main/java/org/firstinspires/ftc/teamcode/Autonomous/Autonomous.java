@@ -35,7 +35,7 @@ import java.lang.Math;
 //robot is a hardware object so you can use hardware methods
 //idle() -
 
-@TeleOp(name = "Testing Autonomous", group = "Linear Opmode")
+//@TeleOp(name = "Testing Autonomous", group = "Linear Opmode")
 
 public class Autonomous extends LinearOpMode {
 
