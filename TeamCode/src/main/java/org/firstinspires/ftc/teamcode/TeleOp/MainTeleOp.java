@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.TeleOp;
 
+import android.os.Handler;
+
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -54,6 +56,7 @@ public class MainTeleOp extends OpMode {
     public void loop() {
         DriveControl();
         ArmControl();
+        LiftControl();
         //HorizontalLiftControl();
         //VerticalLiftControl();
         //telemetry.addData("Left Drive Position", robot.leftBack.getCurrentPosition());
@@ -211,33 +214,79 @@ public class MainTeleOp extends OpMode {
 
 
     //Function for handling horizontal lift
-    public void HorizontalLiftControl() {
+    public void LiftControl() {
 
-        if (gamepad2.dpad_left)
+        double vertical = gamepad2.left_stick_y;
+        double horizontal = gamepad2.right_stick_y;
+
+        //README intakes
+        robot.horizontalIntake.setPower(horizontal);
+        robot.verticalIntake.setPower(vertical);
+
+        //README Suction wheels
+        robot.greenWheelLeft.setPower((gamepad2.y) ? -1 : 0);
+        robot.greenWheelRight.setPower((gamepad2.y) ? -1 : 0);
+
+        //README Gate open/close using triggers and constriction.
+        double rt = gamepad2.right_trigger;
+        double lt = gamepad2.left_trigger;
+
+        //INFO Do constriction and close gate.
+        if(rt > 0.2) {
+            robot.gate.setPosition(1);
+            //Delay 0.8 second
+            Handler h = new Handler();
+            Runnable r = new Runnable() {
+                @Override
+                public void run() {
+                    robot.constrictR.setPosition(1);
+                    robot.constrictL.setPosition(1);
+                }
+            };
+            h.postDelayed(r, 800);
+        } //INFO Undo constriction and open gate.
+        else if (lt > 0.2) {
+            robot.gate.setPosition(0);
+            //Delay 0.8 second
+            Handler h = new Handler();
+            Runnable r = new Runnable() {
+                @Override
+                public void run() {
+                    robot.constrictR.setPosition(0);
+                    robot.constrictL.setPosition(0);
+                }
+            };
+            h.postDelayed(r, 800);
+        }
+
+        //README release extrusion
+
+
+        /*if (gamepad2.dpad_left)
             robot.horizontalLift.setPower(-.7);
         else if (gamepad1.dpad_right)
             robot.horizontalLift.setPower(.7);
         else
-            robot.horizontalLift.setPower(0);
+            robot.horizontalLift.setPower(0);*/
     }
 
     //Function for handling vertical lift
-    public void VerticalLiftControl(){
+    /*public void VerticalLiftControl(){
         if (gamepad1.a)
             robot.verticalLift.setPower(-.7);
         else if (gamepad1.b)
             robot.verticalLift.setPower(.7);
         else
             robot.verticalLift.setPower(0);
-    }
+    }*/
 
     boolean up = true;
 
     public void ArmControl() {
-        if(up){
+        if (up) {
             robot.arm.setPosition(Servo.MIN_POSITION);
             up = false;
-        }else{
+        } else {
             robot.arm.setPosition(Servo.MAX_POSITION);
             up = true;
         }
