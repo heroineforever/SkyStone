@@ -249,7 +249,7 @@ public class MainTeleOp extends OpMode {
             };
             h.postDelayed(r, 800);
         } //INFO Undo constriction and open gate.
-        else if (lt > 0.2) {
+        else if (gamepad2.x) {
             robot.gate.setPosition(0);
             //Delay 0.8 second
             Handler h = new Handler();
@@ -264,7 +264,11 @@ public class MainTeleOp extends OpMode {
         }
 
         //README release extrusion
-
+        if(gamepad2.dpad_up || gamepad2.dpad_left){
+            robot.extrusion1.setPosition(1);
+        }else{
+            robot.extrusion1.setPosition(0);
+        }
 
 
         /*if (gamepad2.dpad_left)
@@ -272,8 +276,8 @@ public class MainTeleOp extends OpMode {
         else if (gamepad1.dpad_right)
             robot.horizontalLift.setPower(.7);
         else
-            robot.horizontalLift.setPower(0);
-    }*/
+            robot.horizontalLift.setPower(0);*/
+    }
 
     //Function for handling vertical lift
     /*public void VerticalLiftControl(){
