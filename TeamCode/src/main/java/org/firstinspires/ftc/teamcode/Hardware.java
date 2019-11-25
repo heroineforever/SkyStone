@@ -8,49 +8,63 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 public class Hardware{
 
-    public DcMotor leftDrive, rightDrive;
+    public DcMotor leftFront, rightFront, rightBack, leftBack;
+    public Servo arm;
 
-    public DcMotor horizontalLift, verticalLift;
+    //public DcMotor horizontalLift, verticalLift;
 
 
     //Constructor
     public Hardware(HardwareMap hwmp) {
         //Assign all motors/servos to the spots on the phone
 
+        //INFO. Just change the name of the motor.
         //Motors
-        leftDrive = hwmp.dcMotor.get("Left Drive");
-        rightDrive = hwmp.dcMotor.get("Right Drive");
-        horizontalLift = hwmp.dcMotor.get("Horizontal Lift");
-        verticalLift = hwmp.dcMotor.get("Vertical Left");
+        leftFront = hwmp.dcMotor.get("Left Front");
+        rightFront = hwmp.dcMotor.get("Right Front");
+        rightBack = hwmp.dcMotor.get("Right Back");
+        leftBack = hwmp.dcMotor.get("Left Back");
+        //horizontalLift = hwmp.dcMotor.get("Horizontal Lift");
+        //verticalLift = hwmp.dcMotor.get("Vertical Left");
 
-        //If you want to put the motor flipped
-        rightDrive.setDirection(DcMotor.Direction.REVERSE);
+        //INFO If you want to put the motor flipped
+        //rightDrive.setDirection(DcMotor.Direction.REVERSE);
+
+        leftFront.setDirection(DcMotor.Direction.REVERSE);
+        leftBack.setDirection(DcMotor.Direction.REVERSE);
 
         //Servos
         //liftServo = hwmp.servo.get("Lift Servo");
-
+        arm = hwmp.servo.get("Arm");
 
     }
 
     //General Methods
     public void resetDriveEncoders() {
+        leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);//reset
+        leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        arm.setDirection(Servo.Direction.FORWARD);
+        //horizontalLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //verticalLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);//reset
-        leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        horizontalLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        verticalLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER); //get ready for rerun
-        leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        horizontalLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        verticalLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER); //get ready for rerun
+        leftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //horizontalLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //verticalLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     public void stopAllMotors() {
-        rightDrive.setPower(0); //this method to stop any motors, range -1 to 1
-        leftDrive.setPower(0);
-        verticalLift.setPower(0);
-        horizontalLift.setPower(0);
+        leftFront.setPower(0); //this method to stop any motors, range -1 to 1
+        rightFront.setPower(0);
+        rightBack.setPower(0);
+        leftBack.setPower(0);
+        arm.setPosition(0);
+        //verticalLift.setPower(0);
+        //horizontalLift.setPower(0);
     }
 
 
