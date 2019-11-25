@@ -36,6 +36,7 @@ public class MainTeleOp extends OpMode {
     DcMotor leftFront, rightFront, leftBack, rightBack;
     Servo arm;
 
+
     @Override
     //initialize
     public void init() {
@@ -116,7 +117,7 @@ public class MainTeleOp extends OpMode {
         }*/
     }
 
-    //INFO This works too, but rotation is very slow.
+    //INFO This works too, but rotation is slow.
     private void IJApproach() {
         //INFO IJ Approach works, but everything is rotated 90 degrees.
         movement = gamepad1.left_stick_y;
@@ -212,9 +213,9 @@ public class MainTeleOp extends OpMode {
 
 
     //Function for handling horizontal lift
-    /*public void HorizontalLiftControl() {
+    public void HorizontalLiftControl() {
 
-        if (gamepad1.dpad_left)
+        if (gamepad2.dpad_left)
             robot.horizontalLift.setPower(-.7);
         else if (gamepad1.dpad_right)
             robot.horizontalLift.setPower(.7);
@@ -230,7 +231,7 @@ public class MainTeleOp extends OpMode {
             robot.verticalLift.setPower(.7);
         else
             robot.verticalLift.setPower(0);
-    }*/
+    }
 
 
 
