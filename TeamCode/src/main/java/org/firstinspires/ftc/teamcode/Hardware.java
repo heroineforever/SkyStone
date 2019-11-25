@@ -30,8 +30,12 @@ public class Hardware{
         //INFO If you want to put the motor flipped
         //rightDrive.setDirection(DcMotor.Direction.REVERSE);
 
-        leftFront.setDirection(DcMotor.Direction.REVERSE);
-        leftBack.setDirection(DcMotor.Direction.REVERSE);
+        //leftFront.setDirection(DcMotor.Direction.REVERSE);
+        //leftBack.setDirection(DcMotor.Direction.REVERSE);
+
+        //INFO Reverse the robot.
+        rightBack.setDirection(DcMotor.Direction.REVERSE);
+        rightFront.setDirection(DcMotor.Direction.REVERSE);
 
         //Servos
         //liftServo = hwmp.servo.get("Lift Servo");
