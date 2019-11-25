@@ -233,13 +233,21 @@ public class MainTeleOp extends OpMode {
     boolean up = true;
 
     public void ArmControl() {
-        if (gamepad1.x) {
+        if(up){
+            robot.arm.setPosition(Servo.MIN_POSITION);
+            up = false;
+        }else{
+            robot.arm.setPosition(Servo.MAX_POSITION);
+            up = true;
+        }
+
+        /*if (gamepad1.x) {
             robot.arm.setPosition(Servo.MAX_POSITION);
             robot.arm.setPosition(Servo.MAX_POSITION);
         }
         if (gamepad1.y) {
             robot.arm.setPosition(Servo.MIN_POSITION);
             robot.arm.setPosition(Servo.MIN_POSITION);
-        }
+        }*/
     }
 }
