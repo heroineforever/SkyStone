@@ -12,7 +12,7 @@ public class Hardware{
     public Servo arm;
     public DcMotor verticalIntake, horizontalIntake;
     public DcMotor greenWheelLeft, greenWheelRight;
-    public Servo gate, constrictL, constrictR, extrusion;
+    public Servo gate, constrictL, constrictR, extrusion1, extrusion2;
 
     //public DcMotor horizontalLift, verticalLift;
 
@@ -36,7 +36,8 @@ public class Hardware{
         gate = hwmp.servo.get("Gate");
         constrictL = hwmp.servo.get("Constriction Left");
         constrictR = hwmp.servo.get("Constriction Right");
-        extrusion = hwmp.servo.get("Extrusion Servo");
+        extrusion1 = hwmp.servo.get("Extrusion Servo 1");
+        extrusion2 = hwmp.servo.get("Extrusion Servo 2");
 
         //INFO If you want to put the motor flipped
         //rightDrive.setDirection(DcMotor.Direction.REVERSE);

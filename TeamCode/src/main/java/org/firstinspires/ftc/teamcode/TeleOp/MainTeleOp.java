@@ -264,7 +264,11 @@ public class MainTeleOp extends OpMode {
         }
 
         //README release extrusion
-
+        if(gamepad2.dpad_up || gamepad2.dpad_left){
+            robot.extrusion1.setPosition(1);
+        }else{
+            robot.extrusion1.setPosition(0);
+        }
 
 
         /*if (gamepad2.dpad_left)
