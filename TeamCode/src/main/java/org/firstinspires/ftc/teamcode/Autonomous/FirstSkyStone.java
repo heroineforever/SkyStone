@@ -53,7 +53,7 @@ import java.lang.Math;
 
 @Autonomous(name = "Testing Autonomous", group = "Autonomous")
 
-public class FirstSkyStone extends LinearOpMode {
+public class FirstSkyStone extends org.firstinspires.ftc.teamcode.Autonomous.Autonomous {
 
     @Override
     public void runOpMode() {

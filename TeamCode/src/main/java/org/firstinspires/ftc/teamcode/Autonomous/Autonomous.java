@@ -1,5 +1,9 @@
 package org.firstinspires.ftc.teamcode.Autonomous;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+
 import android.app.Activity;
 import android.content.res.AssetFileDescriptor;
 
@@ -170,11 +174,24 @@ public class Autonomous extends LinearOpMode {
         /*
          * TODO Keep the robot waiting until a certain time is reached.
          * */
+        while (opModeIsActive() && runtime.seconds() <= seconds) {
+            if(!opModeIsActive()){
+                StopDriveMotors();
+                break;
+            }
+            telemetry.addData("Time Remaining ", Math.ceil(seconds - runtime.seconds()));
+            telemetry.update();
+            telemetry.addData("Current Time ", runtime.seconds());
+            telemetry.update();
+            idle();
+        }
+        if(!opModeIsActive())
+            stop();
     } //wait to move on to next step
 
     void waitFor(double seconds) {
-        //WaitAbsolute(getNewTime(seconds));
         //adds the seconds to the current time
+        waitAbsolute(getNewTime(seconds));
     }
 
     public void timeDrive(double angle, double time, double power) {
@@ -184,7 +201,268 @@ public class Autonomous extends LinearOpMode {
         //for a certain time
         //stop motors
 
+        leftFront.setPower(power);
+        leftBack.setPower(power);
+        rightFront.setPower(power);
+        rightBack.setPower(power);
+
+        waitFor(time);
+
+        StopDriveMotors();
     }
 
+    double getNewTime(double addedSeconds) {
+        return runtime.seconds() + addedSeconds;
+    }
+
+    void timeTurn(double speed, double time){
+
+        leftFront.setPower(speed);
+        leftBack.setPower(speed);
+        rightFront.setPower(-speed);
+        rightBack.setPower(-speed);
+
+        waitFor(time);
+
+        StopDriveMotors();
+
+    }
+    void AbsoluteTurn(double speed, double targetAngle){
+
+        double currentAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
+
+
+        if (currentAngle < targetAngle){
+
+            while (opModeIsActive() && imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle < targetAngle) {
+
+                leftFront.setPower(-speed);
+                rightFront.setPower(speed);
+                leftBack.setPower(-speed);
+                rightBack.setPower(speed);
+            }
+
+
+        }else if (currentAngle > targetAngle){
+
+            while (opModeIsActive() && imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle > targetAngle) {
+
+                leftFront.setPower(speed);
+                rightFront.setPower(-speed);
+                leftBack.setPower(speed);
+                rightBack.setPower(-speed);
+            }
+        }
+
+        StopDriveMotors();
+
+    }
+
+    private double correctAngle(double angle) { // [-180, 180] → [0, 360]
+        return angle + 180;
+    }
+    private double getCorrectedAngle() {
+        return correctAngle(imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle);
+    }
+    void AbsoluteTurnCorrected(double speed, double targetAngle) {
+        double currentAngle = getCorrectedAngle();
+        targetAngle = correctAngle(targetAngle);
+        int rollovers = Math.abs((int) (targetAngle / 360));
+        double targetAfterRollover = targetAngle % 360;
+        if (targetAngle < 0) {
+            rollovers++;
+            targetAfterRollover += 360;
+        }
+        if (targetAngle > currentAngle) {
+            leftFront.setPower(-speed);
+            rightFront.setPower(speed);
+            leftBack.setPower(-speed);
+            rightBack.setPower(speed);
+
+            for (int i = 0; i < rollovers; i++) {
+                while (opModeIsActive() && getCorrectedAngle() <= 180) {
+                    // do nothing
+                }
+                while (opModeIsActive() && getCorrectedAngle() >= 180) {
+                    // do nothing
+                }
+                // this constitutes 1 rollover
+            }
+            while (opModeIsActive() && getCorrectedAngle() < targetAfterRollover) {
+                // do nothing
+            }
+        }
+        else if (targetAngle < currentAngle) {
+            leftFront.setPower(speed);
+            rightFront.setPower(-speed);
+            leftBack.setPower(speed);
+            rightBack.setPower(-speed);
+
+            for (int i = 0; i < rollovers; i++) {
+                while (opModeIsActive() && getCorrectedAngle() >= 180) {
+                    // do nothing
+                }
+                while (opModeIsActive() && getCorrectedAngle() <= 180) {
+                    // do nothing
+                }
+                // this constitutes 1 rollover
+            }
+            while (opModeIsActive() && getCorrectedAngle() > targetAfterRollover) {
+                // do nothing
+            }
+        }
+        StopDriveMotors();
+    }
+    //encoder constants
+    static final double     COUNTS_PER_MOTOR_REV    = 2240 ;    // change for mecanum
+    static final double     DRIVE_GEAR_REDUCTION    = 1.0 ;     // This is < 1.0 if geared UP
+    static final double     WHEEL_DIAMETER_INCHES   = 4 ;     // For figuring circumference
+    static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
+            (WHEEL_DIAMETER_INCHES * 3.1415);
+
+    void EncoderDrive(double speed, double leftInches, double rightInches, double timeout) {
+        ElapsedTime runtime = new ElapsedTime();
+
+        int newLeftTarget;
+        int newRightTarget;
+
+        // Ensure that the opmode is still active
+        if (opModeIsActive()) {
+
+            // Determine new target position, and pass to motor controller
+            newLeftTarget = leftFront.getCurrentPosition() + (int) ((leftInches * COUNTS_PER_INCH));
+            newRightTarget = rightFront.getCurrentPosition() + (int) ((rightInches * COUNTS_PER_INCH));
+            leftFront.setTargetPosition(newLeftTarget);
+            rightFront.setTargetPosition(newLeftTarget);
+            leftBack.setTargetPosition(newRightTarget);
+            rightBack.setTargetPosition(newRightTarget);
+
+            // Turn On RUN_TO_POSITION
+            leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            leftBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+
+            // reset the timeout time and start motion.
+            runtime.reset();
+
+            leftFront.setPower(Math.abs(speed));
+            rightFront.setPower(Math.abs(speed));
+            leftBack.setPower(Math.abs(speed));
+            rightBack.setPower(Math.abs(speed));
+
+            // keep looping while we are still active, and there is time left, and both motors are running.
+            // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
+            // its target position, the motion will stop.  This is "safer" in the event that the robot will
+            // always end the motion as soon as possible.
+            // However, if you require that BOTH motors have finished their moves before the robot continues
+            // onto the next step, use (isBusy() || isBusy()) in the loop test.
+            while (opModeIsActive() &&
+                    (runtime.seconds() < timeout) &&
+                    (leftFront.isBusy() && rightFront.isBusy())) {
+
+                // Display it for the driver.
+                telemetry.addData("Path1", "Running to %7d :%7d", newLeftTarget, newRightTarget);
+                telemetry.addData("Path2", "Running at %7d :%7d",
+                        leftFront.getCurrentPosition(),
+                        rightFront.getCurrentPosition());
+                telemetry.update();
+            }
+
+            // Stop all motion;
+            StopDriveMotors();
+
+            // Turn off RUN_TO_POSITION
+            leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+
+            leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            leftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        }
+    }
+
+
+    void StrafeEncoderDrive(double speed, double leftInches, double rightInches, double timeout) {
+        ElapsedTime runtime = new ElapsedTime();
+
+        int newLeftTarget;
+        int newRightTarget;
+
+        // Ensure that the opmode is still active
+        if (opModeIsActive()) {
+
+            // Determine new target position, and pass to motor controller
+            newLeftTarget = leftFront.getCurrentPosition() + (int) ((leftInches * COUNTS_PER_INCH));
+            newRightTarget = rightBack.getCurrentPosition() + (int) ((rightInches * COUNTS_PER_INCH));
+            leftFront.setTargetPosition(newLeftTarget);
+            rightFront.setTargetPosition(-newLeftTarget);
+            leftBack.setTargetPosition(-newRightTarget);
+            rightBack.setTargetPosition(newRightTarget);
+
+            // Turn On RUN_TO_POSITION
+            leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            leftBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+
+            // reset the timeout time and start motion.
+            runtime.reset();
+
+            leftFront.setPower(Math.abs(speed));
+            rightFront.setPower(Math.abs(speed));
+            leftBack.setPower(Math.abs(speed));
+            rightBack.setPower(Math.abs(speed));
+
+            // keep looping while we are still active, and there is time left, and both motors are running.
+            // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
+            // its target position, the motion will stop.  This is "safer" in the event that the robot will
+            // always end the motion as soon as possible.
+            // However, if you require that BOTH motors have finished their moves before the robot continues
+            // onto the next step, use (isBusy() || isBusy()) in the loop test.
+            while (opModeIsActive() &&
+                    (runtime.seconds() < timeout) &&
+                    (leftFront.isBusy() && rightFront.isBusy())) {
+
+                // Display it for the driver.
+                telemetry.addData("Path1", "Running to %7d :%7d", newLeftTarget, newRightTarget);
+                telemetry.addData("Path2", "Running at %7d :%7d",
+                        leftFront.getCurrentPosition(),
+                        rightFront.getCurrentPosition());
+                telemetry.update();
+            }
+
+            // Stop all motion;
+            StopDriveMotors();
+
+            // Turn off RUN_TO_POSITION
+            leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+
+            leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            leftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        }
+    }
+
+    private void StopDriveMotors(){
+
+        leftFront.setPower(0);
+        rightFront.setPower(0);
+        leftBack.setPower(0);
+        rightBack.setPower(0);
+    }
 
 }

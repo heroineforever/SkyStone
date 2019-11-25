@@ -58,6 +58,7 @@ public class SecondSkystone extends org.firstinspires.ftc.teamcode.Autonomous.Au
     @Override
     public void runOpMode() {
         //Strafe right 1 second.
+
         //Move forward 1/2 second
         //Lower the arm
         //Strafe left for .2 seconds.
