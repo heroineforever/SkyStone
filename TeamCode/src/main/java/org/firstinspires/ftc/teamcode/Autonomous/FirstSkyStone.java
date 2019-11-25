@@ -1,4 +1,5 @@
 package org.firstinspires.ftc.teamcode.Autonomous;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import android.app.Activity;
 import android.content.res.AssetFileDescriptor;
@@ -51,13 +52,13 @@ import java.lang.Math;
 
 @Autonomous(name = "Testing Autonomous", group = "Autonomous")
 
-public class AutoRun /* extendsAutonomous*/{
+public class FirstSkyStone /* extendsAutonomous*/{
 
 
 
     //@Override
     public void runOpMode() {
-        //super.runOpMode();
+
 
         //use methods from autonomous to command the robot
 

@@ -276,8 +276,8 @@ public class MainTeleOp extends OpMode {
         else if (gamepad1.dpad_right)
             robot.horizontalLift.setPower(.7);
         else
-            robot.horizontalLift.setPower(0);*/
-    }
+            robot.horizontalLift.setPower(0);
+    }*/
 
     //Function for handling vertical lift
     /*public void VerticalLiftControl(){

@@ -51,10 +51,6 @@ public class Autonomous extends LinearOpMode {
     double globalAngle, power = 0.30, correction;
     double baseAngle;
 
-    private DcMotor leftFrontDrive = null;
-    private DcMotor rightFrontDrive = null;
-    private DcMotor leftBackDrive = null;
-    private DcMotor rightBackDrive = null;
     protected CameraName cameraName = null;
 
     private ElapsedTime runtime = new ElapsedTime();
@@ -69,24 +65,23 @@ public class Autonomous extends LinearOpMode {
     @Override
     public void runOpMode() {
         robot = new Hardware(hardwareMap);
+        DcMotor leftFront = robot.leftFront;
+        DcMotor rightFront = robot.rightFront;
+        DcMotor leftBack = robot.leftBack;
+        DcMotor rightBack = robot.rightBack;
+
         //runtime = new ElapsedTime();
         telemetry.addData("Status", "Initialized");
         telemetry.update();
-
-        //TODO Have to properly name the motors
-        leftFrontDrive = hardwareMap.get(DcMotor.class, "leftfdrive");
-        rightFrontDrive = hardwareMap.get(DcMotor.class, "rightfdrive");
-        leftBackDrive = hardwareMap.get(DcMotor.class, "leftbdrive");
-        rightBackDrive = hardwareMap.get(DcMotor.class, "rightbdrive");
 
         //TODO Have to properly name the camera
         cameraName = hardwareMap.get(CameraName.class, "Webcam");
 
         //Set directions for motors
-        leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
-        rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
-        leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
-        rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
+        leftFront.setDirection(DcMotor.Direction.REVERSE);
+        rightFront.setDirection(DcMotor.Direction.FORWARD);
+        leftBack.setDirection(DcMotor.Direction.REVERSE);
+        rightBack.setDirection(DcMotor.Direction.FORWARD);
 
         waitForStart();
         initTfod();
