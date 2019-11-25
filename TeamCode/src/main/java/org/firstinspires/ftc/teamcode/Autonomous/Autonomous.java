@@ -61,14 +61,15 @@ public class Autonomous extends LinearOpMode {
     protected VuforiaLocalizer vuforia;
     //TensorFlow Object detector
     protected TFObjectDetector tfod;
+    DcMotor leftFront, rightFront, leftBack, rightBack;
 
     @Override
     public void runOpMode() {
         robot = new Hardware(hardwareMap);
-        DcMotor leftFront = robot.leftFront;
-        DcMotor rightFront = robot.rightFront;
-        DcMotor leftBack = robot.leftBack;
-        DcMotor rightBack = robot.rightBack;
+        leftFront = robot.leftFront;
+        rightFront = robot.rightFront;
+        leftBack = robot.leftBack;
+        rightBack = robot.rightBack;
 
         //runtime = new ElapsedTime();
         telemetry.addData("Status", "Initialized");
@@ -100,7 +101,6 @@ public class Autonomous extends LinearOpMode {
 
         //TODO Write code to move motors and perform the task based on result of TFOD classification.
 
-        
 
         //OLD: Need an Activity object here. Which file do we get this from?
         //tflite = new Interpreter(loadModelFile());
@@ -108,6 +108,22 @@ public class Autonomous extends LinearOpMode {
         //To run the model, we have to do tflite.run(imgData, labelProbArray);
         //I am thinking that, from the video we can take 10 fps and and analyze each image
         // in the frame to make the prediction.
+    }
+
+    public void strafe(double vertical, double horizontal, double power) {
+        double rotation = 0;
+        double magnitude = power;
+        double direction = Math.atan2(-vertical, horizontal);
+
+        double lf = magnitude * Math.sin(direction + Math.PI / 4) - rotation;
+        double lb = magnitude * Math.cos(direction + Math.PI / 4) - rotation;
+        double rf = magnitude * Math.cos(direction + Math.PI / 4) + rotation;
+        double rb = magnitude * Math.sin(direction + Math.PI / 4) + rotation;
+
+        leftFront.setPower(lf);
+        leftBack.setPower(lb);
+        rightFront.setPower(rf);
+        rightBack.setPower(rb);
     }
 
     public void initTfod() {
