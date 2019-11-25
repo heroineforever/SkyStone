@@ -27,6 +27,8 @@ import java.nio.channels.FileChannel;
 
 import static org.firstinspires.ftc.robotcore.external.tfod.TfodRoverRuckus.LABEL_GOLD_MINERAL;
 
+import java.lang.Math;
+
 
 //motor.setZeroPowerBehavior (if you want it float or brake)
 //opModeIsActive() //if you running within 30 seconds
@@ -39,6 +41,9 @@ public class Autonomous extends LinearOpMode {
 
     Hardware robot;
     private static final String TFOD_MODEL_ASSET = "Skystone.tflite";
+    private static final double COUNTS_PER_INCH_HD_MECANUM = 1120 / Math.PI / 4;
+    private static final int COUNTS_PER_REV_CORE = 288;
+    private static final double TURN_DISTANCE_PER_DEGREE = Math.sqrt(1560.49) * Math.PI / 360 / 2;
 
     //imute
     BNO055IMU imu;
