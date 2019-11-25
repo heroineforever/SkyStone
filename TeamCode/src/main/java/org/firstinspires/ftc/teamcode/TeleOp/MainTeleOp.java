@@ -34,6 +34,7 @@ public class MainTeleOp extends OpMode {
     double rotation;
     double strafe;
     DcMotor leftFront, rightFront, leftBack, rightBack;
+    Servo arm;
 
     @Override
     //initialize
@@ -44,6 +45,7 @@ public class MainTeleOp extends OpMode {
         rightFront = robot.rightFront;
         rightBack = robot.rightBack;
         leftBack = robot.leftBack;
+        arm = robot.arm;
 
         //ElapsedTime runtime = new ElapsedTime();
     }
@@ -230,16 +232,14 @@ public class MainTeleOp extends OpMode {
             robot.verticalLift.setPower(0);
     }*/
 
-    boolean up = true;
+
 
     public void ArmControl() {
-        if(up){
-            robot.arm.setPosition(Servo.MIN_POSITION);
-            up = false;
-        }else{
-            robot.arm.setPosition(Servo.MAX_POSITION);
-            up = true;
-        }
+        double armPosition = arm.getPosition();
+        if(gamepad1.x && arm.getPosition() == Servo.MIN_POSITION)
+            arm.setPosition(Servo.MAX_POSITION);
+        else if(gamepad1.x && arm.getPosition() ==  Servo.MAX_POSITION)
+            arm.setPosition(Servo.MIN_POSITION);
 
         /*if (gamepad1.x) {
             robot.arm.setPosition(Servo.MAX_POSITION);
