@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+
 import android.app.Activity;
 import android.content.res.AssetFileDescriptor;
 
@@ -52,11 +53,9 @@ import java.lang.Math;
 
 @Autonomous(name = "Testing Autonomous", group = "Autonomous")
 
-public class FirstSkyStone /* extendsAutonomous*/{
+public class FirstSkyStone extends LinearOpMode {
 
-
-
-    //@Override
+    @Override
     public void runOpMode() {
 
 
