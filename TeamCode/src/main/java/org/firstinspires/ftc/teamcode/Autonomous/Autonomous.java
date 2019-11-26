@@ -299,6 +299,38 @@ public class Autonomous extends LinearOpMode {
         StopDriveMotors();
 
     }
+    void TimeDrive(double speed, double time){
+        leftFront.setPower(speed);
+        leftBack.setPower(speed);
+        rightFront.setPower(speed);
+        rightBack.setPower(speed);
+
+        WaitFor(time);
+
+        StopDriveMotors();
+
+    }
+
+    void WaitFor(double seconds) {
+        WaitAbsolute(getNewTime(seconds));
+    }
+
+    void WaitAbsolute(double seconds) {
+
+        while (opModeIsActive() && runtime.seconds() <= seconds) {
+            if(!opModeIsActive()){
+                StopDriveMotors();
+                break;
+            }
+            telemetry.addData("Time Remaining ", Math.ceil(seconds - runTime.seconds()));
+            telemetry.update();
+            telemetry.addData("Current Time ", runtime.seconds());
+            telemetry.update();
+            idle();
+        }
+        if(!opModeIsActive())
+            stop();
+    }
     void AbsoluteTurn(double speed, double targetAngle){
 
         double currentAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
