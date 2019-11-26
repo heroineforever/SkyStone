@@ -23,6 +23,8 @@ import org.tensorflow.lite.Interpreter;
 import java.lang.Math;
 import java.util.List;
 
+import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
+
 
 //motor.setZeroPowerBehavior (if you want it float or brake)
 //opModeIsActive() //if you running within 30 seconds
@@ -44,9 +46,7 @@ public class Autonomous extends LinearOpMode {
 
     //TensorFlow
     private static final String TFOD_MODEL_ASSET = "Skystone.tflite";
-    private static final String LABEL_FIRST_POSITION = "First Skystone";
-    private static final String LABEL_SECOND_POSITION = "Second Skystone";
-    private static final String LABEL_THIRD_POSITION = "Third Skystone";
+    private static final String LABEL_SPECIAL_SKYSTONE = "Special Skystone";
     public Interpreter tflite;
 
     //imute
@@ -115,7 +115,7 @@ public class Autonomous extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         tfod.activate();
 
-        //TODO Need a method to determine which position the Special Skystone is
+        //TODO check this method
         SkyStonePosition position = getSkyStonePositionAndWaitForStart();
 
         waitForStart();
@@ -174,7 +174,7 @@ public class Autonomous extends LinearOpMode {
 
         //INFO Load the model and the classes.
         //TODO need to load the classes. I don't know the class names.
-        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_POSITION, LABEL_SECOND_POSITION, LABEL_THIRD_POSITION);
+        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_SPECIAL_SKYSTONE);
     }
 
     /**
@@ -201,7 +201,7 @@ public class Autonomous extends LinearOpMode {
                 List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
                 if (updatedRecognitions != null) {
                     telemetry.addData("# Object Detected", updatedRecognitions.size());
-                    int goldMineralCount = 0;
+                    int skystoneCount = 0;
                     for (Recognition recognition : updatedRecognitions) {
                         /* note: the following conditions mean:
                             recognition.getWidth() < recognition.getImageWidth() / 3
@@ -214,36 +214,36 @@ public class Autonomous extends LinearOpMode {
                         if (recognition.getWidth() < recognition.getImageWidth() / 3 &&
                                 recognition.getBottom() > recognition.getImageHeight() * 2 / 3 &&
                                 recognition.getWidth() < 1.5 * recognition.getHeight()) {
-                            if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
-                                goldMineralCount++;
+                            if (recognition.getLabel().equals(LABEL_SPECIAL_SKYSTONE)) {
+                                skystoneCount++;
                                 if (recognition.getLeft() < recognition.getImageWidth() / 3) {
-                                    goldMineralPos = 0;
+                                    position = SkyStonePosition.THIRD;
                                 }
                                 else if (recognition.getLeft() < recognition.getImageWidth() / 3 * 2) {
-                                    goldMineralPos = 1;
+                                    position = SkyStonePosition.SECOND;
                                 }
                                 else {
-                                    goldMineralPos = 2;
+                                    position = SkyStonePosition.FIRST;
                                 }
                             }
                         }
                     }
-                    if (goldMineralCount <= 1) {
-                        if (goldMineralPos == 0) {
-                            telemetry.addData("Gold Mineral Position", "Left");
-                        } else if (goldMineralPos == 1) {
-                            telemetry.addData("Gold Mineral Position", "Center");
-                        } else if (goldMineralPos == 2) {
-                            telemetry.addData("Gold Mineral Position", "Right");
+                    if (skystoneCount <= 1) {
+                        if (position == SkyStonePosition.THIRD) {
+                            telemetry.addData("Skystone Position", "Third");
+                        } else if (position == SkyStonePosition.SECOND) {
+                            telemetry.addData("Skystone Position", "Second");
+                        } else if (position == SkyStonePosition.FIRST) {
+                            telemetry.addData("Skystone Position", "First");
                         }
                     } else {
-                        goldMineralPos = 2;
+                        position = SkyStonePosition.SECOND;
                     }
                     telemetry.update();
                 }
             }
         }
-        return goldMineralPos;
+        return position;
     }
 
 
