@@ -7,12 +7,13 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraName;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 
 public class Hardware{
 
     public DcMotor leftFront, rightFront, rightBack, leftBack;
     public Servo arm;
-    public CameraName cameraName;
+    public WebcamName cameraName;
     //public DcMotor verticalIntake, horizontalIntake;
     //public DcMotor greenWheelLeft, greenWheelRight;
     //public Servo gate, constrictL, constrictR, extrusion;
@@ -55,7 +56,7 @@ public class Hardware{
         //liftServo = hwmp.servo.get("Lift Servo");
         arm = hwmp.servo.get("Arm");
 
-        cameraName = hwmp.get(CameraName.class, "Webcam");
+        cameraName = hwmp.get(WebcamName.class, "Webcam");
 
     }
 
