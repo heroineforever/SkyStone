@@ -23,9 +23,6 @@ import org.tensorflow.lite.Interpreter;
 import java.lang.Math;
 import java.util.List;
 
-import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
-
-
 //motor.setZeroPowerBehavior (if you want it float or brake)
 //opModeIsActive() //if you running within 30 seconds
 //robot is a hardware object so you can use hardware methods
@@ -147,14 +144,13 @@ public class Autonomous extends LinearOpMode {
     }
 
     public void strafe(double vertical, double horizontal, double power, double time) {
-        double rotation = 0;
         double magnitude = power;
         double direction = Math.atan2(-vertical, horizontal);
 
-        double lf = magnitude * Math.sin(direction + Math.PI / 4) - rotation;
-        double lb = magnitude * Math.cos(direction + Math.PI / 4) - rotation;
-        double rf = magnitude * Math.cos(direction + Math.PI / 4) + rotation;
-        double rb = magnitude * Math.sin(direction + Math.PI / 4) + rotation;
+        double lf = magnitude * Math.sin(direction + Math.PI / 4);
+        double lb = magnitude * Math.cos(direction + Math.PI / 4);
+        double rf = magnitude * Math.cos(direction + Math.PI / 4);
+        double rb = magnitude * Math.sin(direction + Math.PI / 4);
 
         leftFront.setPower(lf);
         leftBack.setPower(lb);
@@ -298,38 +294,6 @@ public class Autonomous extends LinearOpMode {
 
         StopDriveMotors();
 
-    }
-    void TimeDrive(double speed, double time){
-        leftFront.setPower(speed);
-        leftBack.setPower(speed);
-        rightFront.setPower(speed);
-        rightBack.setPower(speed);
-
-        WaitFor(time);
-
-        StopDriveMotors();
-
-    }
-
-    void WaitFor(double seconds) {
-        WaitAbsolute(getNewTime(seconds));
-    }
-
-    void WaitAbsolute(double seconds) {
-
-        while (opModeIsActive() && runtime.seconds() <= seconds) {
-            if(!opModeIsActive()){
-                StopDriveMotors();
-                break;
-            }
-            telemetry.addData("Time Remaining ", Math.ceil(seconds - runTime.seconds()));
-            telemetry.update();
-            telemetry.addData("Current Time ", runtime.seconds());
-            telemetry.update();
-            idle();
-        }
-        if(!opModeIsActive())
-            stop();
     }
     void AbsoluteTurn(double speed, double targetAngle){
 

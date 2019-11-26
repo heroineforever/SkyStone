@@ -4,10 +4,10 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import com.qualcomm.robotcore.hardware.Servo;
 
-@Autonomous(name = "Testing One", group = "Autonomous")
+@Autonomous(name = "Testing Three", group = "Autonomous")
 
-public class FirstSkyStone extends org.firstinspires.ftc.teamcode.Autonomous.Autonomous {
-
+public class ThirdSkyStone extends org.firstinspires.ftc.teamcode.Autonomous.Autonomous
+{
     @Override
     public void runOpMode() {
 
@@ -37,5 +37,6 @@ public class FirstSkyStone extends org.firstinspires.ftc.teamcode.Autonomous.Aut
         strafe(-1, 0, 1, 1.5);
         //Forward .5
         strafe(1, 0, 1, .5);
+
     }
 }
