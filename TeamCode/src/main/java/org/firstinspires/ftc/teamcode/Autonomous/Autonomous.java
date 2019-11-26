@@ -4,15 +4,10 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
-import android.app.Activity;
-import android.content.res.AssetFileDescriptor;
-
 import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.vuforia.Vuforia;
 
@@ -24,13 +19,6 @@ import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.teamcode.Hardware;
 import org.tensorflow.lite.Interpreter;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.nio.MappedByteBuffer;
-import java.nio.channels.FileChannel;
-
-import static org.firstinspires.ftc.robotcore.external.tfod.TfodRoverRuckus.LABEL_GOLD_MINERAL;
-
 import java.lang.Math;
 
 
@@ -39,33 +27,44 @@ import java.lang.Math;
 //robot is a hardware object so you can use hardware methods
 //idle() -
 
-//@TeleOp(name = "Testing Autonomous", group = "Linear Opmode")
-
 public class Autonomous extends LinearOpMode {
 
     Hardware robot;
+    ElapsedTime runtime = new ElapsedTime();
+    DcMotor leftFront, rightFront, leftBack, rightBack;
+    Servo arm;
+    protected CameraName cameraName;
+
+    public enum SkyStonePosition
+    {
+        FIRST, SECOND, THIRD;
+    }
+
+    //TensorFlow
     private static final String TFOD_MODEL_ASSET = "Skystone.tflite";
-    private static final double COUNTS_PER_INCH_HD_MECANUM = 1120 / Math.PI / 4;
-    private static final int COUNTS_PER_REV_CORE = 288;
-    private static final double TURN_DISTANCE_PER_DEGREE = Math.sqrt(1560.49) * Math.PI / 360 / 2;
+    private static final String LABEL_FIRST_POSITION = "First Skystone";
+    private static final String LABEL_SECOND_POSITION = "Second Skystone";
+    private static final String LABEL_THIRD_POSITION = "Third Skystone";
+    public Interpreter tflite;
 
     //imute
     BNO055IMU imu;
     Orientation lastAngles = new Orientation();
-    double globalAngle, power = 0.30, correction;
+    double globalAngle, power = .30, correction;
     double baseAngle;
-
-    protected CameraName cameraName = null;
-
-    private ElapsedTime runtime = new ElapsedTime();
-    public Interpreter tflite;
 
     //Vuforia stuff
     private static final String VUFORIA_KEY = "ATKKdVf/////AAABmb9SxtpqfUvxqCFmSowoT10see3Vz9mze+DVTbtqieMNjFxZverOpqc4OYMhAkuv9rnJMQZyuaweuLOXioXqVuYJ2P2yRohAKL//zPiF1drlPCUbzdhh3pFV8X4rnBILwoF9C3gWvpQfB//IJdZXNBkWYOZAp+UXGBW2WGdt2rQFHw4Y23GrGb2XCmPEHynO8tiNb6IzR6vOh/KOZ8GyTVES7+GyMVhFWNqgL969+ra6Ev5mgfDqaIt4DAqOoiMomDF9mm+Ixx7m6R2pwJC69XVvqAE6+fuotOs8fvA2XRtU+NNaD2ALR247keSC3qK0RnH8JGjYbSmiOHuRqHW9p9J/JrG1OPOxKnKuGEhhcgA7";
     protected VuforiaLocalizer vuforia;
     //TensorFlow Object detector
     protected TFObjectDetector tfod;
-    DcMotor leftFront, rightFront, leftBack, rightBack;
+
+    //Constants
+    private static final double COUNTS_PER_INCH_HD_MECANUM = 1120 / Math.PI / 4;
+    private static final int COUNTS_PER_REV_CORE = 288;
+    private static final double TURN_DISTANCE_PER_DEGREE = Math.sqrt(1560.49) * Math.PI / 360 / 2;
+
+
 
     @Override
     public void runOpMode() {
@@ -75,27 +74,48 @@ public class Autonomous extends LinearOpMode {
         leftBack = robot.leftBack;
         rightBack = robot.rightBack;
 
-        //runtime = new ElapsedTime();
-        telemetry.addData("Status", "Initialized");
-        telemetry.update();
+        arm = robot.arm;
+        cameraName = robot.cameraName;
 
-        //TODO Have to properly name the camera
-        cameraName = hardwareMap.get(CameraName.class, "Webcam");
+        robot.resetDriveEncoders();
 
-        //Set directions for motors
         leftFront.setDirection(DcMotor.Direction.REVERSE);
         rightFront.setDirection(DcMotor.Direction.FORWARD);
         leftBack.setDirection(DcMotor.Direction.REVERSE);
         rightBack.setDirection(DcMotor.Direction.FORWARD);
+        arm.setPosition(Servo.MIN_POSITION);
+
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+
+        parameters.mode                = BNO055IMU.SensorMode.IMU;
+        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.loggingEnabled      = false;
+        //Configure Vuforia by creating a Parameter object, and passing it to the com.vuforia.Vuforia engine.
+
+        imu = hardwareMap.get(BNO055IMU.class, "imu");
+        imu.initialize(parameters);
+
+        baseAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
+
+        //runtime = new ElapsedTime();
+        telemetry.addData("Status", "Initialized");
+        telemetry.update();
+
+        //Set directions for motors
 
         waitForStart();
-        initTfod();
         initVuforia();
+        initTfod();
 
         while (!imu.isSystemCalibrated()) idle();
 
         // Wait for the game to start (driver presses PLAY)
         tfod.activate();
+
+        //TODO Need a method to determine which position the Special Skystone is
+        SkyStonePosition position = getSkyStonePositionAndWaitForStart();
+
         waitForStart();
         if (!opModeIsActive()) return;
         //TODO Write function to run TFOD object on image and determine important position info.
@@ -105,6 +125,16 @@ public class Autonomous extends LinearOpMode {
 
         //TODO Write code to move motors and perform the task based on result of TFOD classification.
 
+
+        telemetry.addLine("Gyro ready");
+        telemetry.addData("heading: ", imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle);
+        telemetry.update();
+
+        baseAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
+
+        //robot.webcamServo.setPosition(Servo.MAX_POSITION);
+
+        //robot.liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         //OLD: Need an Activity object here. Which file do we get this from?
         //tflite = new Interpreter(loadModelFile());
@@ -138,14 +168,13 @@ public class Autonomous extends LinearOpMode {
 
         //INFO Load the model and the classes.
         //TODO need to load the classes. I don't know the class names.
-        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, "");
+        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_POSITION, LABEL_SECOND_POSITION, LABEL_THIRD_POSITION);
     }
 
     /**
      * Initialize the Vuforia localization engine.
      */
     protected void initVuforia() {
-        //Configure Vuforia by creating a Parameter object, and passing it to the com.vuforia.Vuforia engine.
 
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
 
@@ -155,6 +184,60 @@ public class Autonomous extends LinearOpMode {
 
         //  Instantiate the Vuforia engine
         vuforia = ClassFactory.getInstance().createVuforia(parameters);
+    }
+
+    protected SkyStonePosition getSkyStonePositionAndWaitForStart() {
+        SkyStonePosition position = SkyStonePosition.SECOND;
+        while (/*opModeIsActive() && */! isStarted() && ! isStopRequested()) {
+            if (tfod != null) {
+                // getUpdatedRecognitions() will return null if no new information is available since
+                // the last time that call was made.
+                List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
+                if (updatedRecognitions != null) {
+                    telemetry.addData("# Object Detected", updatedRecognitions.size());
+                    int goldMineralCount = 0;
+                    for (Recognition recognition : updatedRecognitions) {
+                        /* note: the following conditions mean:
+                            recognition.getWidth() < recognition.getImageWidth() / 3
+                                avoids a very wide false positive that can be caused by the background
+                            recognition.getBottom() > recognition.getImageHeight() * 2 / 3
+                                ignores any minerals in the crater
+                            recognition.getWidth() < 1.5 * recognition.getHeight()
+                                avoids a rectangular false positive generated by the red x
+                        */
+                        if (recognition.getWidth() < recognition.getImageWidth() / 3 &&
+                                recognition.getBottom() > recognition.getImageHeight() * 2 / 3 &&
+                                recognition.getWidth() < 1.5 * recognition.getHeight()) {
+                            if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
+                                goldMineralCount++;
+                                if (recognition.getLeft() < recognition.getImageWidth() / 3) {
+                                    goldMineralPos = 0;
+                                }
+                                else if (recognition.getLeft() < recognition.getImageWidth() / 3 * 2) {
+                                    goldMineralPos = 1;
+                                }
+                                else {
+                                    goldMineralPos = 2;
+                                }
+                            }
+                        }
+                    }
+                    if (goldMineralCount <= 1) {
+                        if (goldMineralPos == 0) {
+                            telemetry.addData("Gold Mineral Position", "Left");
+                        } else if (goldMineralPos == 1) {
+                            telemetry.addData("Gold Mineral Position", "Center");
+                        } else if (goldMineralPos == 2) {
+                            telemetry.addData("Gold Mineral Position", "Right");
+                        }
+                    } else {
+                        goldMineralPos = 2;
+                    }
+                    telemetry.update();
+                }
+            }
+        }
+        return goldMineralPos;
     }
 
 
@@ -192,23 +275,6 @@ public class Autonomous extends LinearOpMode {
     void waitFor(double seconds) {
         //adds the seconds to the current time
         waitAbsolute(getNewTime(seconds));
-    }
-
-    public void timeDrive(double angle, double time, double power) {
-        angle = Math.toRadians(angle) - Math.PI / 4;
-
-        //if opModeIsActive(), move the motors
-        //for a certain time
-        //stop motors
-
-        leftFront.setPower(power);
-        leftBack.setPower(power);
-        rightFront.setPower(power);
-        rightBack.setPower(power);
-
-        waitFor(time);
-
-        StopDriveMotors();
     }
 
     double getNewTime(double addedSeconds) {
