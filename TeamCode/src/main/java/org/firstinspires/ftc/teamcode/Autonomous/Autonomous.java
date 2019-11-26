@@ -15,11 +15,13 @@ import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraName;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.teamcode.Hardware;
 import org.tensorflow.lite.Interpreter;
 
 import java.lang.Math;
+import java.util.List;
 
 
 //motor.setZeroPowerBehavior (if you want it float or brake)
@@ -144,7 +146,7 @@ public class Autonomous extends LinearOpMode {
         // in the frame to make the prediction.
     }
 
-    public void strafe(double vertical, double horizontal, double power) {
+    public void strafe(double vertical, double horizontal, double power, double time) {
         double rotation = 0;
         double magnitude = power;
         double direction = Math.atan2(-vertical, horizontal);
@@ -158,6 +160,10 @@ public class Autonomous extends LinearOpMode {
         leftBack.setPower(lb);
         rightFront.setPower(rf);
         rightBack.setPower(rb);
+
+        waitFor(time);
+
+        StopDriveMotors();
     }
 
     public void initTfod() {
