@@ -206,7 +206,7 @@ public class MainTeleOp extends OpMode {
         leftBack.setPower((magnitude * Math.cos(direction + Math.PI / 4) + rotation)*-1);
         rightFront.setPower((magnitude * Math.cos(direction + Math.PI / 4) - rotation)*-1);
         rightBack.setPower((magnitude * Math.sin(direction + Math.PI / 4) - rotation)*-1);*/
-    }
+}
 
 
     //Function for handling horizontal lift
