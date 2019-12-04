@@ -34,6 +34,7 @@ public class Autonomous extends LinearOpMode {
     ElapsedTime runtime = new ElapsedTime();
     DcMotor leftFront, rightFront, leftBack, rightBack;
     Servo arm;
+    public Servo platformL, platformR;
     protected CameraName cameraName;
 
     public enum SkyStonePosition

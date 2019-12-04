@@ -1,37 +1,33 @@
 package org.firstinspires.ftc.teamcode.TeleOp;
 
-import android.os.Handler;
-
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-
 import org.firstinspires.ftc.teamcode.Hardware;
-//import org.firstinspires.ftc.teamcode.teamcode.Testers.MecanumTest;
-
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.ElapsedTime;
-import com.vuforia.Vuforia;
-
 import java.lang.Math;
 
-
+/*
+  Notes:
+    Encoders are doubles
+    .getCurrentPosition() retrieves encoder values
+    left and right triggers on controllers are scaled 0-1
+    .getMode() exists
+ */
 @TeleOp(name = "Testing TeleOp", group = "Linear Opmode")
 //@Disabled
-//robot.motor.setPower(numerical value);
-//encoders are doubles
-//.getCurrentPosition(), retrieves encoder values, getPosition() for servo
-//gamepad1.left_trigger and such are scaled 0-1
-//.getMode()
 
-
+/**
+ * MainTeleOp is the class responsible for all of the TeleOp methods. It has a robot, movement. rotation, strafe, four motors, and a servo
+ */
 public class MainTeleOp extends OpMode {
 
-
-    //make a robot
+    //Create a robot---responsible for connecting hardware of Hardware class to methods
     Hardware robot;
+
     //private ElaspedTime runTime; for if you need to drive by time
+
+    //Direct
     double movement;
     double rotation;
     double strafe;

@@ -37,6 +37,6 @@ public class ThirdSkyStone extends org.firstinspires.ftc.teamcode.Autonomous.Aut
         strafe(-1, 0, 1, 1.5);
         //Forward .5
         strafe(1, 0, 1, .5);
-
+        stop();
     }
 }

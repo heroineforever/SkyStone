@@ -1,93 +1,146 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
-
-import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 
-public class Hardware{
 
+/**
+ * This class defines all the hardware components of the robot. It has eight DcMotors, five Servos, and one WebcamName. It can reset drive encoders and stop all motors
+ */
+public class Hardware {
+
+    //Define all the motors, servos, and cameras of the robot
+
+    //Drive Train
     public DcMotor leftFront, rightFront, rightBack, leftBack;
+    //Intake
+    public DcMotor greenWheelLeft, greenWheelRight;
+    //Lift
+    public DcMotor horizontalLift, verticalLift;
+    //Arm
     public Servo arm;
+    //Platform
+    public Servo platformL, platformR;
+    //SkyBlock Holders
+    public Servo constrictL, constrictR;
+    //Camera
     public WebcamName cameraName;
-    //public DcMotor verticalIntake, horizontalIntake;
-    //public DcMotor greenWheelLeft, greenWheelRight;
-    //public Servo gate, constrictL, constrictR, extrusion;
 
-    //public DcMotor horizontalLift, verticalLift;
+    /*
+    Extra motors and servos in case we add them later on
+        public DcMotor verticalIntake, horizontalIntake;
+        public Servo gate, constrictL, constrictR, extrusion;
+     */
 
-
-    //Constructor
+    /**
+     * Creates a new Hardware with all parts connected to a name
+     * @param hwmp map of robot parts on the control hub
+     */
     public Hardware(HardwareMap hwmp) {
-        //Assign all motors/servos to the spots on the phone
 
-        //INFO. Just change the name of the motor.
-        //Motors
+        //Drive Train
         leftFront = hwmp.dcMotor.get("Left Front");
         rightFront = hwmp.dcMotor.get("Right Front");
         rightBack = hwmp.dcMotor.get("Right Back");
         leftBack = hwmp.dcMotor.get("Left Back");
 
-       /* greenWheelLeft = hwmp.dcMotor.get("Green Wheel Left");
+        //Intake
+        greenWheelLeft = hwmp.dcMotor.get("Green Wheel Left");
         greenWheelRight = hwmp.dcMotor.get("Green Wheel Right");
-        horizontalIntake = hwmp.dcMotor.get("Horizontal Intake");
-        verticalIntake = hwmp.dcMotor.get("Vertical Intake");
 
-        gate = hwmp.servo.get("Gate");
+        //Lift
+        horizontalLift = hwmp.dcMotor.get("Horizontal Lift");
+        verticalLift = hwmp.dcMotor.get("Vertical Lift");
+
+        //Arm
+        arm = hwmp.servo.get("Arm");
+
+        //Platform
+        platformL = hwmp.servo.get("Platform Left");
+        platformR = hwmp.servo.get("Platform Right");
+
+        //SkyBlock Holders
         constrictL = hwmp.servo.get("Constriction Left");
         constrictR = hwmp.servo.get("Constriction Right");
-        extrusion = hwmp.servo.get("Extrusion Servo");*/
 
-        //INFO If you want to put the motor flipped
-        //rightDrive.setDirection(DcMotor.Direction.REVERSE);
+        //Camera
+        cameraName = hwmp.get(WebcamName.class, "Webcam");
 
-        //leftFront.setDirection(DcMotor.Direction.REVERSE);
-        //leftBack.setDirection(DcMotor.Direction.REVERSE);
+        /*
+        Extra motors and servos in case we add them later on
+            horizontalIntake = hwmp.dcMotor.get("Horizontal Intake");
+            verticalIntake = hwmp.dcMotor.get("Vertical Intake");
+            liftServo = hwmp.servo.get("Lift Servo");
+            gate = hwmp.servo.get("Gate");
+            extrusion = hwmp.servo.get("Extrusion Servo");
+         */
 
-        //INFO Reverse the robot.
+        //Flips motors because they are placed in the opposite direction on the robot---allows for all motors to move in the same direction for one value
         rightBack.setDirection(DcMotor.Direction.REVERSE);
         rightFront.setDirection(DcMotor.Direction.REVERSE);
 
-        //Servos
-        //liftServo = hwmp.servo.get("Lift Servo");
-        arm = hwmp.servo.get("Arm");
-
-        cameraName = hwmp.get(WebcamName.class, "Webcam");
+        //Set all servo directions
+        arm.setDirection(Servo.Direction.FORWARD);
+        constrictL.setDirection(Servo.Direction.FORWARD);
+        constrictR.setDirection(Servo.Direction.FORWARD);
+        platformL.setDirection(Servo.Direction.FORWARD);
+        platformR.setDirection(Servo.Direction.FORWARD);
 
     }
 
-    //General Methods
+    /**
+     * Resets drive encoders so that they are starting from 0 at every time
+     * Encoders are used to control how much a motor moves---used for travelling by distance and setting levels for lifting
+     */
     public void resetDriveEncoders() {
-        leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);//reset
+
+        //Stop and Reset Encoders
+        leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        arm.setDirection(Servo.Direction.FORWARD);
-        //horizontalLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        //verticalLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        horizontalLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        verticalLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        greenWheelLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        greenWheelRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER); //get ready for rerun
+        //Start motors using resetted encoders
+        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         leftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        //horizontalLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        //verticalLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        horizontalLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        verticalLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        greenWheelRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        greenWheelLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
     }
 
+    /**
+     * Stop all the motors and servos
+     * Essentially stop the robot
+     * Note: Motor power ranges go from -1 to 1 as a double explicit parameter
+     * Note: Servo positions go from 0 to 1 as a double explicit parameter. The actual position of 0 and 1 are based on servo limits programmed by the servo programmer
+     */
     public void stopAllMotors() {
-        leftFront.setPower(0); //this method to stop any motors, range -1 to 1
+
+        //Motors
+        leftFront.setPower(0);
         rightFront.setPower(0);
         rightBack.setPower(0);
         leftBack.setPower(0);
+        verticalLift.setPower(0);
+        horizontalLift.setPower(0);
+
+        //Servos
         arm.setPosition(0);
-        //verticalLift.setPower(0);
-        //horizontalLift.setPower(0);
+        constrictR.setPosition(0);
+        constrictL.setPosition(0);
+        platformR.setPosition(0);
+        platformL.setPosition(0);
+
     }
-
-
 
 }
