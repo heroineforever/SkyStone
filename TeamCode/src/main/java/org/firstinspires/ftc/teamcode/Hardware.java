@@ -70,9 +70,9 @@ public class Hardware {
         //Camera
         cameraName = hwmp.get(WebcamName.class, "Webcam");
 
-        gate = hwmp.get("Gate");
-        extrusionL = hwmp.get("Extrusion Left");
-        extrusionR = hwmp.get("Extrusion Right");
+        gate = hwmp.servo.get("Gate");
+        extrusionL = hwmp.servo.get("Extrusion Left");
+        extrusionR = hwmp.servo.get("Extrusion Right");
 
         /*
         Extra motors and servos in case we add them later on
