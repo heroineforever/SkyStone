@@ -28,6 +28,8 @@ public class Hardware {
     //Camera
     public WebcamName cameraName;
 
+    public Servo gate, extrusionL, extrusionR;
+
     /*
     Extra motors and servos in case we add them later on
         public DcMotor verticalIntake, horizontalIntake;
@@ -67,6 +69,10 @@ public class Hardware {
 
         //Camera
         cameraName = hwmp.get(WebcamName.class, "Webcam");
+
+        gate = hwmp.get("Gate");
+        extrusionL = hwmp.get("Extrusion Left");
+        extrusionR = hwmp.get("Extrusion Right");
 
         /*
         Extra motors and servos in case we add them later on

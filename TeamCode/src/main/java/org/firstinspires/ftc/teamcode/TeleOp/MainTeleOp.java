@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.TeleOp;
 
+import android.os.Handler;
+
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.teamcode.Hardware;
@@ -214,14 +216,14 @@ public class MainTeleOp extends OpMode {
 
 
     //Function for handling horizontal lift
-    /*public void LiftControl() {
+    public void LiftControl() {
 
         double vertical = gamepad2.left_stick_y;
         double horizontal = gamepad2.right_stick_y;
 
         //README intakes
-        robot.horizontalIntake.setPower(horizontal);
-        robot.verticalIntake.setPower(vertical);
+        robot.horizontalLift.setPower(horizontal);
+        robot.verticalLift.setPower(vertical);
 
         //README Suction wheels
         robot.greenWheelLeft.setPower((gamepad2.y) ? -1 : 0);
@@ -261,19 +263,21 @@ public class MainTeleOp extends OpMode {
 
         //README release extrusion
         if(gamepad2.dpad_up || gamepad2.dpad_left){
-            robot.extrusion1.setPosition(1);
+            robot.extrusionL.setPosition(1);
+            robot.extrusionR.setPosition(1);
         }else{
-            robot.extrusion1.setPosition(0);
+            robot.extrusionR.setPosition(0);
+            robot.extrusionL.setPosition(0);
         }
 
 
-        /*if (gamepad2.dpad_left)
+        if (gamepad2.dpad_left)
             robot.horizontalLift.setPower(-.7);
         else if (gamepad1.dpad_right)
             robot.horizontalLift.setPower(.7);
         else
             robot.horizontalLift.setPower(0);
-    }*/
+    }
 
     //Function for handling vertical lift
     /*public void VerticalLiftControl(){
