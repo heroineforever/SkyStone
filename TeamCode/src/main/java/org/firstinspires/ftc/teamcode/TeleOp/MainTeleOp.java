@@ -29,12 +29,14 @@ public class MainTeleOp extends OpMode {
 
     //private ElaspedTime runTime; for if you need to drive by time
 
-    //Direct
+    //Directions
     double movement;
     double rotation;
     double strafe;
-    DcMotor leftFront, rightFront, leftBack, rightBack;
-    Servo arm;
+
+    //Define the Motors and Servos here to not rely on referencing the robot variable to access the motors and servos
+    DcMotor leftFront, rightFront, leftBack, rightBack, greenWheelLeft, greenWheelRight, horizontalLift, verticalLift;
+    Servo arm, platformL, platformR, constrictL, constrictR, gate, extrusionL, extrusionR;
 
 
     @Override
@@ -42,12 +44,25 @@ public class MainTeleOp extends OpMode {
     public void init() {
         //map hardware
         robot = new Hardware(hardwareMap);
+        //Assign the motors and servos to the ones on the robot to not require
         leftFront = robot.leftFront;
         rightFront = robot.rightFront;
         rightBack = robot.rightBack;
         leftBack = robot.leftBack;
         arm = robot.arm;
+        greenWheelLeft = robot.greenWheelLeft;
+        greenWheelRight = robot.greenWheelRight;
+        horizontalLift = robot.horizontalLift;
+        verticalLift = robot.verticalLift;
+        platformL = robot.platformL;
+        platformR = robot.platformR;
+        constrictL = robot.constrictL;
+        constrictR = robot.constrictR;
+        gate = robot.gate;
+        extrusionL = robot.extrusionL;
+        extrusionR = robot.extrusionR;
 
+        //Set starting position for arm servo
         arm.setPosition(Servo.MIN_POSITION);
 
         //ElapsedTime runtime = new ElapsedTime();
@@ -58,7 +73,7 @@ public class MainTeleOp extends OpMode {
     public void loop() {
         DriveControl();
         ArmControl();
-        //LiftControl();
+        LiftControl();
         //HorizontalLiftControl();
         //VerticalLiftControl();
         //telemetry.addData("Left Drive Position", robot.leftBack.getCurrentPosition());
@@ -79,13 +94,48 @@ public class MainTeleOp extends OpMode {
 
     //Driving Control function
     public void DriveControl() {
+        movement = gamepad1.left_stick_y;
+        rotation = gamepad1.right_stick_x;
+        strafe = gamepad1.left_stick_x;
+        double magnitude = Math.sqrt(Math.pow(gamepad1.left_stick_x, 2) + Math.pow(gamepad1.left_stick_y, 2));
+        double direction = Math.atan2(-gamepad1.left_stick_x, gamepad1.left_stick_y);
+        double rotation = gamepad1.right_stick_x;
+
+        //trig implementation
+        //double power = Math.hypot(x1, y1);
+        //double angle = Math.atan2(y1, x1) - Math.PI/4;
+
+        //INFO Increasing speed to maximum of 1
+        double lf = magnitude * Math.sin(direction + Math.PI / 4) - rotation;
+        double lb = magnitude * Math.cos(direction + Math.PI / 4) - rotation;
+        double rf = magnitude * Math.cos(direction + Math.PI / 4) + rotation;
+        double rb = magnitude * Math.sin(direction + Math.PI / 4) + rotation;
+        double hypot = Math.hypot(movement, strafe);
+        double ratio;
+        if (movement == 0 && strafe == 0)
+            ratio = 1;
+        else
+            ratio = hypot / (Math.max(Math.max(Math.max(Math.abs(lf), Math.abs(lb)), Math.abs(rb)), Math.abs(rf)));
+
+        leftFront.setPower(ratio * lf);
+        leftBack.setPower(ratio * lb);
+        rightFront.setPower(ratio * rf);
+        rightBack.setPower(ratio * rb);
+
+        /*leftFront.setPower((magnitude * Math.sin(direction + Math.PI / 4) + rotation)*-1);
+        leftBack.setPower((magnitude * Math.cos(direction + Math.PI / 4) + rotation)*-1);
+        rightFront.setPower((magnitude * Math.cos(direction + Math.PI / 4) - rotation)*-1);
+        rightBack.setPower((magnitude * Math.sin(direction + Math.PI / 4) - rotation)*-1);*/
+
+        ////////////////////////////////////////////////////////////////////////////////////////////
+
         //got the direction from the controller then told the motors what to do
         /*movement = gamepad1.left_stick_y;
         rotation = gamepad1.right_stick_x;
         strafe = gamepad1.left_stick_x;*/
         //INFO joystick ranges -1 to 1
 
-        approachOne();
+        //approachOne();
         //IJApproach();
 
         /*if (rotation == 0) {
@@ -120,7 +170,7 @@ public class MainTeleOp extends OpMode {
         }*/
     }
 
-    //INFO This works too, but rotation is slow.
+    /*//INFO This works too, but rotation is slow.
     private void IJApproach() {
         //INFO IJ Approach works, but everything is rotated 90 degrees.
         movement = gamepad1.left_stick_y;
@@ -211,8 +261,8 @@ public class MainTeleOp extends OpMode {
         /*leftFront.setPower((magnitude * Math.sin(direction + Math.PI / 4) + rotation)*-1);
         leftBack.setPower((magnitude * Math.cos(direction + Math.PI / 4) + rotation)*-1);
         rightFront.setPower((magnitude * Math.cos(direction + Math.PI / 4) - rotation)*-1);
-        rightBack.setPower((magnitude * Math.sin(direction + Math.PI / 4) - rotation)*-1);*/
-    }
+        rightBack.setPower((magnitude * Math.sin(direction + Math.PI / 4) - rotation)*-1);
+    }*/
 
 
     //Function for handling horizontal lift

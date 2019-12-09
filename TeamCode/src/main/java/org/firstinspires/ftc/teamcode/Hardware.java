@@ -33,7 +33,6 @@ public class Hardware {
     /*
     Extra motors and servos in case we add them later on
         public DcMotor verticalIntake, horizontalIntake;
-        public Servo gate, constrictL, constrictR, extrusion;
      */
 
     /**
