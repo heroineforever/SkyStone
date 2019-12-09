@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.TeleOp;
 
+import android.os.Handler;
+
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -34,6 +36,8 @@ public class MainTeleOp extends OpMode {
     double rotation;
     double strafe;
     DcMotor leftFront, rightFront, leftBack, rightBack;
+    Servo arm;
+
 
     @Override
     //initialize
@@ -44,6 +48,9 @@ public class MainTeleOp extends OpMode {
         rightFront = robot.rightFront;
         rightBack = robot.rightBack;
         leftBack = robot.leftBack;
+        arm = robot.arm;
+
+        arm.setPosition(Servo.MIN_POSITION);
 
         //ElapsedTime runtime = new ElapsedTime();
     }
@@ -53,6 +60,7 @@ public class MainTeleOp extends OpMode {
     public void loop() {
         DriveControl();
         ArmControl();
+        //LiftControl();
         //HorizontalLiftControl();
         //VerticalLiftControl();
         //telemetry.addData("Left Drive Position", robot.leftBack.getCurrentPosition());
@@ -114,7 +122,7 @@ public class MainTeleOp extends OpMode {
         }*/
     }
 
-    //INFO This works too, but rotation is very slow.
+    //INFO This works too, but rotation is slow.
     private void IJApproach() {
         //INFO IJ Approach works, but everything is rotated 90 degrees.
         movement = gamepad1.left_stick_y;
@@ -179,7 +187,7 @@ public class MainTeleOp extends OpMode {
         strafe = gamepad1.left_stick_x;
         double magnitude = Math.sqrt(Math.pow(gamepad1.left_stick_x, 2) + Math.pow(gamepad1.left_stick_y, 2));
         double direction = Math.atan2(-gamepad1.left_stick_x, gamepad1.left_stick_y);
-        double rotation = -gamepad1.right_stick_x;
+        double rotation = gamepad1.right_stick_x;
 
         //trig implementation
         //double power = Math.hypot(x1, y1);
@@ -210,18 +218,69 @@ public class MainTeleOp extends OpMode {
 
 
     //Function for handling horizontal lift
-    /*public void HorizontalLiftControl() {
+    /*public void LiftControl() {
 
-        if (gamepad1.dpad_left)
+        double vertical = gamepad2.left_stick_y;
+        double horizontal = gamepad2.right_stick_y;
+
+        //README intakes
+        robot.horizontalIntake.setPower(horizontal);
+        robot.verticalIntake.setPower(vertical);
+
+        //README Suction wheels
+        robot.greenWheelLeft.setPower((gamepad2.y) ? -1 : 0);
+        robot.greenWheelRight.setPower((gamepad2.y) ? -1 : 0);
+
+        //README Gate open/close using triggers and constriction.
+        double rt = gamepad2.right_trigger;
+        double lt = gamepad2.left_trigger;
+
+        //INFO Do constriction and close gate.
+        if (rt > 0.2) {
+            robot.gate.setPosition(1);
+            //Delay 0.8 second
+            Handler h = new Handler();
+            Runnable r = new Runnable() {
+                @Override
+                public void run() {
+                    robot.constrictR.setPosition(1);
+                    robot.constrictL.setPosition(1);
+                }
+            };
+            h.postDelayed(r, 800);
+        } //INFO Undo constriction and open gate.
+        else if (gamepad2.x) {
+            robot.gate.setPosition(0);
+            //Delay 0.8 second
+            Handler h = new Handler();
+            Runnable r = new Runnable() {
+                @Override
+                public void run() {
+                    robot.constrictR.setPosition(0);
+                    robot.constrictL.setPosition(0);
+                }
+            };
+            h.postDelayed(r, 800);
+        }
+
+        //README release extrusion
+        if(gamepad2.dpad_up || gamepad2.dpad_left){
+            robot.extrusion1.setPosition(1);
+        }else{
+            robot.extrusion1.setPosition(0);
+        }
+
+
+        /*if (gamepad2.dpad_left)
             robot.horizontalLift.setPower(-.7);
         else if (gamepad1.dpad_right)
             robot.horizontalLift.setPower(.7);
         else
             robot.horizontalLift.setPower(0);
-    }
+    }*/
 
     //Function for handling vertical lift
-    public void VerticalLiftControl(){
+    /*public void VerticalLiftControl(){
         if (gamepad1.a)
             robot.verticalLift.setPower(-.7);
         else if (gamepad1.b)
@@ -233,13 +292,11 @@ public class MainTeleOp extends OpMode {
     boolean up = true;
 
     public void ArmControl() {
-        if(up){
-            robot.arm.setPosition(Servo.MIN_POSITION);
-            up = false;
-        }else{
-            robot.arm.setPosition(Servo.MAX_POSITION);
-            up = true;
-        }
+        if(gamepad1.x)
+            arm.setPosition(Servo.MAX_POSITION);
+        if(gamepad1.y)
+            arm.setPosition(Servo.MIN_POSITION);
+
 
         /*if (gamepad1.x) {
             robot.arm.setPosition(Servo.MAX_POSITION);
