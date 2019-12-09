@@ -74,10 +74,14 @@ public class MainTeleOp extends OpMode {
         DriveControl();
         ArmControl();
         LiftControl();
-        //HorizontalLiftControl();
+        PlatformControl();
+        //Intake();
         //VerticalLiftControl();
         //telemetry.addData("Left Drive Position", robot.leftBack.getCurrentPosition());
         //telemetry.addData("Right Drive Position", robot.rightBack.getCurrentPosition());
+
+        greenWheelRight.setPower(1);
+        greenWheelLeft.setPower(1);
 
         telemetry.addData("Left Back Power", robot.leftBack.getPower());
         telemetry.addData("Left Front Power", robot.leftFront.getPower());
@@ -358,4 +362,17 @@ public class MainTeleOp extends OpMode {
             robot.arm.setPosition(Servo.MIN_POSITION);
         }*/
     }
+
+    public void PlatformControl()
+    {
+        if(gamepad1.a) {
+            platformR.setPosition(Servo.MAX_POSITION);
+            platformL.setPosition(Servo.MAX_POSITION);
+        }
+        if(gamepad1.b) {
+            platformR.setPosition(Servo.MIN_POSITION);
+            platformL.setPosition(Servo.MIN_POSITION);
+        }
+    }
+
 }
