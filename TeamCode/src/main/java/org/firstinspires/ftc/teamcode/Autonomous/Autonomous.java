@@ -15,6 +15,7 @@ import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraName;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.teamcode.Hardware;
 import org.tensorflow.lite.Interpreter;
@@ -35,7 +36,20 @@ import static org.firstinspires.ftc.robotcore.external.tfod.TfodRoverRuckus.LABE
 public class Autonomous extends LinearOpMode {
 
     Hardware robot;
+    ElapsedTime runtime = new ElapsedTime();
+    DcMotor leftFront, rightFront, leftBack, rightBack;
+    Servo arm;
+    protected CameraName cameraName;
+
+    public enum SkyStonePosition
+    {
+        FIRST, SECOND, THIRD;
+    }
+
+    //TensorFlow
     private static final String TFOD_MODEL_ASSET = "Skystone.tflite";
+    private static final String LABEL_SPECIAL_SKYSTONE = "Special Skystone";
+    public Interpreter tflite;
 
     //imute
     BNO055IMU imu;
@@ -110,17 +124,17 @@ public class Autonomous extends LinearOpMode {
         int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
                 "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
-        tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
+        tfodtected void init = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
 
-        //INFO Load the model and the classes.
-        //TODO need to load the classes. I don't know the class names.
+    //INFO Load the model and the classes.
+    //TODO need to load the classes. I don't know the class names.
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, "");
-    }
+}
 
     /**
      * Initialize the Vuforia localization engine.
      */
-    protected void initVuforia() {
+    proVuforia() {
         //Configure Vuforia by creating a Parameter object, and passing it to the com.vuforia.Vuforia engine.
 
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();

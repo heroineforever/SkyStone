@@ -2,41 +2,41 @@ package org.firstinspires.ftc.teamcode.TeleOp;
 
 import android.os.Handler;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-
 import org.firstinspires.ftc.teamcode.Hardware;
-//import org.firstinspires.ftc.teamcode.teamcode.Testers.MecanumTest;
-
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.ElapsedTime;
-import com.vuforia.Vuforia;
-
 import java.lang.Math;
 
-
+/*
+  Notes:
+    Encoders are doubles
+    .getCurrentPosition() retrieves encoder values
+    left and right triggers on controllers are scaled 0-1
+    .getMode() exists
+ */
 @TeleOp(name = "Testing TeleOp", group = "Linear Opmode")
 //@Disabled
-//robot.motor.setPower(numerical value);
-//encoders are doubles
-//.getCurrentPosition(), retrieves encoder values, getPosition() for servo
-//gamepad1.left_trigger and such are scaled 0-1
-//.getMode()
 
-
+/**
+ * MainTeleOp is the class responsible for all of the TeleOp methods. It has a robot, movement. rotation, strafe, four motors, and a servo
+ */
 public class MainTeleOp extends OpMode {
 
-
-    //make a robot
+    //Create a robot---responsible for connecting hardware of Hardware class to methods
     Hardware robot;
+
     //private ElaspedTime runTime; for if you need to drive by time
+
+    //Directions
     double movement;
     double rotation;
     double strafe;
-    DcMotor leftFront, rightFront, leftBack, rightBack;
-    Servo arm;
+
+    //Define the Motors and Servos here to not rely on referencing the robot variable to access the motors and servos
+    DcMotor leftFront, rightFront, leftBack, rightBack, greenWheelLeft, greenWheelRight, horizontalLift, verticalLift;
+    Servo arm, platformL, platformR, constrictL, constrictR, gate, extrusionL, extrusionR;
 
 
     @Override
@@ -44,12 +44,25 @@ public class MainTeleOp extends OpMode {
     public void init() {
         //map hardware
         robot = new Hardware(hardwareMap);
+        //Assign the motors and servos to the ones on the robot to not require
         leftFront = robot.leftFront;
         rightFront = robot.rightFront;
         rightBack = robot.rightBack;
         leftBack = robot.leftBack;
         arm = robot.arm;
+        greenWheelLeft = robot.greenWheelLeft;
+        greenWheelRight = robot.greenWheelRight;
+        horizontalLift = robot.horizontalLift;
+        verticalLift = robot.verticalLift;
+        platformL = robot.platformL;
+        platformR = robot.platformR;
+        constrictL = robot.constrictL;
+        constrictR = robot.constrictR;
+        gate = robot.gate;
+        extrusionL = robot.extrusionL;
+        extrusionR = robot.extrusionR;
 
+        //Set starting position for arm servo
         arm.setPosition(Servo.MIN_POSITION);
 
         //ElapsedTime runtime = new ElapsedTime();
@@ -60,11 +73,15 @@ public class MainTeleOp extends OpMode {
     public void loop() {
         DriveControl();
         ArmControl();
-        //LiftControl();
-        //HorizontalLiftControl();
+        LiftControl();
+        PlatformControl();
+        //Intake();
         //VerticalLiftControl();
         //telemetry.addData("Left Drive Position", robot.leftBack.getCurrentPosition());
         //telemetry.addData("Right Drive Position", robot.rightBack.getCurrentPosition());
+
+        greenWheelRight.setPower(1);
+        greenWheelLeft.setPower(1);
 
         telemetry.addData("Left Back Power", robot.leftBack.getPower());
         telemetry.addData("Left Front Power", robot.leftFront.getPower());
@@ -81,13 +98,48 @@ public class MainTeleOp extends OpMode {
 
     //Driving Control function
     public void DriveControl() {
+        movement = gamepad1.left_stick_y;
+        rotation = gamepad1.right_stick_x;
+        strafe = gamepad1.left_stick_x;
+        double magnitude = Math.sqrt(Math.pow(gamepad1.left_stick_x, 2) + Math.pow(gamepad1.left_stick_y, 2));
+        double direction = Math.atan2(-gamepad1.left_stick_x, gamepad1.left_stick_y);
+        double rotation = gamepad1.right_stick_x;
+
+        //trig implementation
+        //double power = Math.hypot(x1, y1);
+        //double angle = Math.atan2(y1, x1) - Math.PI/4;
+
+        //INFO Increasing speed to maximum of 1
+        double lf = magnitude * Math.sin(direction + Math.PI / 4) - rotation;
+        double lb = magnitude * Math.cos(direction + Math.PI / 4) - rotation;
+        double rf = magnitude * Math.cos(direction + Math.PI / 4) + rotation;
+        double rb = magnitude * Math.sin(direction + Math.PI / 4) + rotation;
+        double hypot = Math.hypot(movement, strafe);
+        double ratio;
+        if (movement == 0 && strafe == 0)
+            ratio = 1;
+        else
+            ratio = hypot / (Math.max(Math.max(Math.max(Math.abs(lf), Math.abs(lb)), Math.abs(rb)), Math.abs(rf)));
+
+        leftFront.setPower(ratio * lf);
+        leftBack.setPower(ratio * lb);
+        rightFront.setPower(ratio * rf);
+        rightBack.setPower(ratio * rb);
+
+        /*leftFront.setPower((magnitude * Math.sin(direction + Math.PI / 4) + rotation)*-1);
+        leftBack.setPower((magnitude * Math.cos(direction + Math.PI / 4) + rotation)*-1);
+        rightFront.setPower((magnitude * Math.cos(direction + Math.PI / 4) - rotation)*-1);
+        rightBack.setPower((magnitude * Math.sin(direction + Math.PI / 4) - rotation)*-1);*/
+
+        ////////////////////////////////////////////////////////////////////////////////////////////
+
         //got the direction from the controller then told the motors what to do
         /*movement = gamepad1.left_stick_y;
         rotation = gamepad1.right_stick_x;
         strafe = gamepad1.left_stick_x;*/
         //INFO joystick ranges -1 to 1
 
-        approachOne();
+        //approachOne();
         //IJApproach();
 
         /*if (rotation == 0) {
@@ -122,7 +174,7 @@ public class MainTeleOp extends OpMode {
         }*/
     }
 
-    //INFO This works too, but rotation is slow.
+    /*//INFO This works too, but rotation is slow.
     private void IJApproach() {
         //INFO IJ Approach works, but everything is rotated 90 degrees.
         movement = gamepad1.left_stick_y;
@@ -213,19 +265,19 @@ public class MainTeleOp extends OpMode {
         /*leftFront.setPower((magnitude * Math.sin(direction + Math.PI / 4) + rotation)*-1);
         leftBack.setPower((magnitude * Math.cos(direction + Math.PI / 4) + rotation)*-1);
         rightFront.setPower((magnitude * Math.cos(direction + Math.PI / 4) - rotation)*-1);
-        rightBack.setPower((magnitude * Math.sin(direction + Math.PI / 4) - rotation)*-1);*/
-}
+        rightBack.setPower((magnitude * Math.sin(direction + Math.PI / 4) - rotation)*-1);
+    }*/
 
 
     //Function for handling horizontal lift
-    /*public void LiftControl() {
+    public void LiftControl() {
 
         double vertical = gamepad2.left_stick_y;
         double horizontal = gamepad2.right_stick_y;
 
         //README intakes
-        robot.horizontalIntake.setPower(horizontal);
-        robot.verticalIntake.setPower(vertical);
+        robot.horizontalLift.setPower(horizontal);
+        robot.verticalLift.setPower(vertical);
 
         //README Suction wheels
         robot.greenWheelLeft.setPower((gamepad2.y) ? -1 : 0);
@@ -265,19 +317,21 @@ public class MainTeleOp extends OpMode {
 
         //README release extrusion
         if(gamepad2.dpad_up || gamepad2.dpad_left){
-            robot.extrusion1.setPosition(1);
+            robot.extrusionL.setPosition(1);
+            robot.extrusionR.setPosition(1);
         }else{
-            robot.extrusion1.setPosition(0);
+            robot.extrusionR.setPosition(0);
+            robot.extrusionL.setPosition(0);
         }
 
 
-        /*if (gamepad2.dpad_left)
+        if (gamepad2.dpad_left)
             robot.horizontalLift.setPower(-.7);
         else if (gamepad1.dpad_right)
             robot.horizontalLift.setPower(.7);
         else
             robot.horizontalLift.setPower(0);
-    }*/
+    }
 
     //Function for handling vertical lift
     /*public void VerticalLiftControl(){
@@ -307,4 +361,17 @@ public class MainTeleOp extends OpMode {
             robot.arm.setPosition(Servo.MIN_POSITION);
         }*/
     }
+
+    public void PlatformControl()
+    {
+        if(gamepad1.a) {
+            platformR.setPosition(Servo.MAX_POSITION);
+            platformL.setPosition(Servo.MAX_POSITION);
+        }
+        if(gamepad1.b) {
+            platformR.setPosition(Servo.MIN_POSITION);
+            platformL.setPosition(Servo.MIN_POSITION);
+        }
+    }
+
 }
