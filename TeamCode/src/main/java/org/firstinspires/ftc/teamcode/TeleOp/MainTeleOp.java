@@ -297,7 +297,8 @@ public class MainTeleOp extends OpMode {
             };
             h.postDelayed(r, 800);
         } //INFO Undo constriction and open gate.
-        else if (gamepad2.x) {
+        else if (lt > 0.2) {
+        //else if (gamepad2.x) {
             robot.gate.setPosition(0);
             //Delay 0.8 second
             Handler h = new Handler();
