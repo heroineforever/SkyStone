@@ -74,10 +74,19 @@ public class Autonomous extends LinearOpMode {
         leftBack = robot.leftBack;
         rightBack = robot.rightBack;
 
-        arm = robot.arm;
+        telemetry.addData("Motor Status", rightBack==null);
+        telemetry.addData("Motor Status", rightFront==null);
+        telemetry.addData("Motor Status", leftFront==null);
+        telemetry.addData("Motor Status", leftBack==null);
+
+        /*arm = robot.arm;
         cameraName = robot.cameraName;
 
-        robot.resetDriveEncoders();
+        //robot.resetDriveEncoders();
+        leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         leftFront.setDirection(DcMotor.Direction.REVERSE);
         rightFront.setDirection(DcMotor.Direction.FORWARD);
@@ -131,7 +140,7 @@ public class Autonomous extends LinearOpMode {
         telemetry.update();
 
         baseAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
-
+*/
         //robot.webcamServo.setPosition(Servo.MAX_POSITION);
 
         //robot.liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

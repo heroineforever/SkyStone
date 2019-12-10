@@ -36,7 +36,7 @@ public class MainTeleOp extends OpMode {
 
     //Define the Motors and Servos here to not rely on referencing the robot variable to access the motors and servos
     DcMotor leftFront, rightFront, leftBack, rightBack, greenWheelLeft, greenWheelRight, horizontalLift, verticalLift;
-    Servo arm, platformL, platformR, constrictL, constrictR, gate, extrusionL, extrusionR;
+    Servo arm, platformL, platformR, constrictL, constrictR, gate; //extrusionL, extrusionR;
 
 
     @Override
@@ -59,8 +59,8 @@ public class MainTeleOp extends OpMode {
         constrictL = robot.constrictL;
         constrictR = robot.constrictR;
         gate = robot.gate;
-        extrusionL = robot.extrusionL;
-        extrusionR = robot.extrusionR;
+        //extrusionL = robot.extrusionL;
+        //extrusionR = robot.extrusionR;
 
         //Set starting position for arm servo
         arm.setPosition(Servo.MIN_POSITION);
@@ -81,7 +81,7 @@ public class MainTeleOp extends OpMode {
         //telemetry.addData("Right Drive Position", robot.rightBack.getCurrentPosition());
 
         greenWheelRight.setPower(1);
-        greenWheelLeft.setPower(1);
+        greenWheelLeft.setPower(-1);
 
         telemetry.addData("Left Back Power", robot.leftBack.getPower());
         telemetry.addData("Left Front Power", robot.leftFront.getPower());
@@ -318,11 +318,11 @@ public class MainTeleOp extends OpMode {
 
         //README release extrusion
         if(gamepad2.dpad_up || gamepad2.dpad_left){
-            robot.extrusionL.setPosition(1);
-            robot.extrusionR.setPosition(1);
+            robot.platformL.setPosition(1);
+            robot.platformR.setPosition(1);
         }else{
-            robot.extrusionR.setPosition(0);
-            robot.extrusionL.setPosition(0);
+            robot.platformR.setPosition(0);
+            robot.platformL.setPosition(0);
         }
 
 
