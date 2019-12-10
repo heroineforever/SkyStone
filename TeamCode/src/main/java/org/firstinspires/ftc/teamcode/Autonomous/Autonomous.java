@@ -37,8 +37,7 @@ public class Autonomous extends LinearOpMode {
     public Servo platformL, platformR;
     protected CameraName cameraName;
 
-    public enum SkyStonePosition
-    {
+    public enum SkyStonePosition {
         FIRST, SECOND, THIRD;
     }
 
@@ -65,7 +64,6 @@ public class Autonomous extends LinearOpMode {
     private static final double TURN_DISTANCE_PER_DEGREE = Math.sqrt(1560.49) * Math.PI / 360 / 2;
 
 
-
     @Override
     public void runOpMode() {
         robot = new Hardware(hardwareMap);
@@ -73,11 +71,12 @@ public class Autonomous extends LinearOpMode {
         rightFront = robot.rightFront;
         leftBack = robot.leftBack;
         rightBack = robot.rightBack;
+        arm = robot.arm;
 
-        telemetry.addData("Motor Status", rightBack==null);
-        telemetry.addData("Motor Status", rightFront==null);
-        telemetry.addData("Motor Status", leftFront==null);
-        telemetry.addData("Motor Status", leftBack==null);
+        telemetry.addData("Motor Status", rightBack == null);
+        telemetry.addData("Motor Status", rightFront == null);
+        telemetry.addData("Motor Status", leftFront == null);
+        telemetry.addData("Motor Status", leftBack == null);
 
         /*arm = robot.arm;
         cameraName = robot.cameraName;
@@ -200,7 +199,7 @@ public class Autonomous extends LinearOpMode {
 
     protected SkyStonePosition getSkyStonePositionAndWaitForStart() {
         SkyStonePosition position = SkyStonePosition.SECOND;
-        while (/*opModeIsActive() && */! isStarted() && ! isStopRequested()) {
+        while (/*opModeIsActive() && */!isStarted() && !isStopRequested()) {
             if (tfod != null) {
                 // getUpdatedRecognitions() will return null if no new information is available since
                 // the last time that call was made.
@@ -224,11 +223,9 @@ public class Autonomous extends LinearOpMode {
                                 skystoneCount++;
                                 if (recognition.getLeft() < recognition.getImageWidth() / 3) {
                                     position = SkyStonePosition.THIRD;
-                                }
-                                else if (recognition.getLeft() < recognition.getImageWidth() / 3 * 2) {
+                                } else if (recognition.getLeft() < recognition.getImageWidth() / 3 * 2) {
                                     position = SkyStonePosition.SECOND;
-                                }
-                                else {
+                                } else {
                                     position = SkyStonePosition.FIRST;
                                 }
                             }
@@ -270,7 +267,7 @@ public class Autonomous extends LinearOpMode {
          * TODO Keep the robot waiting until a certain time is reached.
          * */
         while (opModeIsActive() && runtime.seconds() <= seconds) {
-            if(!opModeIsActive()){
+            if (!opModeIsActive()) {
                 StopDriveMotors();
                 break;
             }
@@ -280,7 +277,7 @@ public class Autonomous extends LinearOpMode {
             telemetry.update();
             idle();
         }
-        if(!opModeIsActive())
+        if (!opModeIsActive())
             stop();
     } //wait to move on to next step
 
@@ -293,7 +290,7 @@ public class Autonomous extends LinearOpMode {
         return runtime.seconds() + addedSeconds;
     }
 
-    void timeTurn(double speed, double time){
+    void timeTurn(double speed, double time) {
 
         leftFront.setPower(speed);
         leftBack.setPower(speed);
@@ -305,12 +302,13 @@ public class Autonomous extends LinearOpMode {
         StopDriveMotors();
 
     }
-    void AbsoluteTurn(double speed, double targetAngle){
+
+    void AbsoluteTurn(double speed, double targetAngle) {
 
         double currentAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
 
 
-        if (currentAngle < targetAngle){
+        if (currentAngle < targetAngle) {
 
             while (opModeIsActive() && imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle < targetAngle) {
 
@@ -321,7 +319,7 @@ public class Autonomous extends LinearOpMode {
             }
 
 
-        }else if (currentAngle > targetAngle){
+        } else if (currentAngle > targetAngle) {
 
             while (opModeIsActive() && imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle > targetAngle) {
 
@@ -339,9 +337,11 @@ public class Autonomous extends LinearOpMode {
     private double correctAngle(double angle) { // [-180, 180] → [0, 360]
         return angle + 180;
     }
+
     private double getCorrectedAngle() {
         return correctAngle(imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle);
     }
+
     void AbsoluteTurnCorrected(double speed, double targetAngle) {
         double currentAngle = getCorrectedAngle();
         targetAngle = correctAngle(targetAngle);
@@ -369,8 +369,7 @@ public class Autonomous extends LinearOpMode {
             while (opModeIsActive() && getCorrectedAngle() < targetAfterRollover) {
                 // do nothing
             }
-        }
-        else if (targetAngle < currentAngle) {
+        } else if (targetAngle < currentAngle) {
             leftFront.setPower(speed);
             rightFront.setPower(-speed);
             leftBack.setPower(speed);
@@ -391,11 +390,12 @@ public class Autonomous extends LinearOpMode {
         }
         StopDriveMotors();
     }
+
     //encoder constants
-    static final double     COUNTS_PER_MOTOR_REV    = 2240 ;    // change for mecanum
-    static final double     DRIVE_GEAR_REDUCTION    = 1.0 ;     // This is < 1.0 if geared UP
-    static final double     WHEEL_DIAMETER_INCHES   = 4 ;     // For figuring circumference
-    static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
+    static final double COUNTS_PER_MOTOR_REV = 2240;    // change for mecanum
+    static final double DRIVE_GEAR_REDUCTION = 1.0;     // This is < 1.0 if geared UP
+    static final double WHEEL_DIAMETER_INCHES = 4;     // For figuring circumference
+    static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415);
 
     void EncoderDrive(double speed, double leftInches, double rightInches, double timeout) {
@@ -535,7 +535,7 @@ public class Autonomous extends LinearOpMode {
         }
     }
 
-    private void StopDriveMotors(){
+    private void StopDriveMotors() {
 
         leftFront.setPower(0);
         rightFront.setPower(0);
