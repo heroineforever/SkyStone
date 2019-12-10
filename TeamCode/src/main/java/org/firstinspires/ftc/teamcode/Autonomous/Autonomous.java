@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.vuforia.Vuforia;
 
@@ -129,7 +130,7 @@ public class Autonomous extends LinearOpMode {
     //INFO Load the model and the classes.
     //TODO need to load the classes. I don't know the class names.
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, "");
-}
+
 
     /**
      * Initialize the Vuforia localization engine.
@@ -137,7 +138,7 @@ public class Autonomous extends LinearOpMode {
     proVuforia() {
         //Configure Vuforia by creating a Parameter object, and passing it to the com.vuforia.Vuforia engine.
 
-        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
+        VuforiaLocalizer.Parameters paramgit eters = new VuforiaLocalizer.Parameters();
 
         parameters.vuforiaLicenseKey = VUFORIA_KEY;
 //        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;

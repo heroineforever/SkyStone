@@ -287,7 +287,7 @@ public class MainTeleOp extends OpMode {
         double rt = gamepad2.right_trigger;
         double lt = gamepad2.left_trigger;
 
-        //INFO Do constriction and close gate.
+        //INFO Do constriction and close gate.=
         if (rt > 0.2) {
             robot.gate.setPosition(1);
             //Delay 0.8 second
