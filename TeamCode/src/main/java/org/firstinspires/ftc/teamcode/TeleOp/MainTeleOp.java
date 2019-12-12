@@ -63,7 +63,9 @@ public class MainTeleOp extends OpMode {
         //extrusionR = robot.extrusionR;
 
         //Set starting position for arm servo
-        arm.setPosition(Servo.MIN_POSITION);
+        arm.setPosition(Servo.MAX_POSITION);
+        platformR.setPosition(Servo.MIN_POSITION);
+        platformL.setPosition(Servo.MAX_POSITION);
 
         //ElapsedTime runtime = new ElapsedTime();
     }
@@ -75,13 +77,15 @@ public class MainTeleOp extends OpMode {
         ArmControl();
         LiftControl();
         PlatformControl();
+        //
+        // Test();
         //Intake();
         //VerticalLiftControl();
         //telemetry.addData("Left Drive Position", robot.leftBack.getCurrentPosition());
         //telemetry.addData("Right Drive Position", robot.rightBack.getCurrentPosition());
 
-        greenWheelRight.setPower(1);
-        greenWheelLeft.setPower(-1);
+        //greenWheelRight.setPower(1);
+        //greenWheelLeft.setPower(-1);
 
         telemetry.addData("Left Back Power", robot.leftBack.getPower());
         telemetry.addData("Left Front Power", robot.leftFront.getPower());
@@ -97,6 +101,14 @@ public class MainTeleOp extends OpMode {
     }
 
     //Driving Control function
+
+    public void Test(){
+        rightBack.setPower(.5);
+        rightFront.setPower(.5);
+        leftBack.setPower(.5);
+        leftFront.setPower(.5);
+    }
+
     public void DriveControl() {
         movement = gamepad1.left_stick_y;
         rotation = gamepad1.right_stick_x;
@@ -280,6 +292,8 @@ public class MainTeleOp extends OpMode {
         robot.verticalLift.setPower(vertical);
 
         //README Suction wheels
+        /*robot.greenWheelLeft.setPower(1);
+        robot.greenWheelRight.setPower(1);*/
         robot.greenWheelLeft.setPower((gamepad2.y) ? -1 : 0);
         robot.greenWheelRight.setPower((gamepad2.y) ? -1 : 0);
 //aa
@@ -314,15 +328,6 @@ public class MainTeleOp extends OpMode {
                 }
             };
             h.postDelayed(r, 800);
-        }
-
-        //README release extrusion
-        if(gamepad2.dpad_up || gamepad2.dpad_left){
-            robot.platformL.setPosition(1);
-            robot.platformR.setPosition(1);
-        }else{
-            robot.platformR.setPosition(0);
-            robot.platformL.setPosition(0);
         }
 
 
@@ -367,11 +372,11 @@ public class MainTeleOp extends OpMode {
     {
         if(gamepad1.a) {
             platformR.setPosition(Servo.MAX_POSITION);
-            platformL.setPosition(Servo.MAX_POSITION);
+            platformL.setPosition(Servo.MIN_POSITION);
         }
         if(gamepad1.b) {
             platformR.setPosition(Servo.MIN_POSITION);
-            platformL.setPosition(Servo.MIN_POSITION);
+            platformL.setPosition(Servo.MAX_POSITION);
         }
     }
 

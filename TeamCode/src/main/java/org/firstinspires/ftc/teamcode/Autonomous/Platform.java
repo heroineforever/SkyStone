@@ -14,8 +14,10 @@ public class Platform extends org.firstinspires.ftc.teamcode.Autonomous.Autonomo
         waitForStart();
 
         //Strafe right 1 second.
-        strafe(0, 1, 1, 1);
+        strafe(1, 0, 1, 0.9);
         //Lower the platform servos
+        rotate(true, 0.2);
+        strafe(1, 0.2, 0.2, 0.5);
         platformR.setPosition(Servo.MAX_POSITION);
         platformL.setPosition(Servo.MAX_POSITION);
         //Turn
@@ -25,6 +27,7 @@ public class Platform extends org.firstinspires.ftc.teamcode.Autonomous.Autonomo
         //Let go of platform
         platformR.setPosition(Servo.MIN_POSITION);
         platformL.setPosition(Servo.MIN_POSITION);
+        strafe(-1, 0, 0.2, 0.8);
         stop();
     }
 }
