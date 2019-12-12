@@ -11,6 +11,8 @@ public class Platform extends org.firstinspires.ftc.teamcode.Autonomous.Autonomo
     @Override
     public void runOpMode() {
 
+        super.runOpMode();
+
         waitForStart();
 
         //Strafe right 1 second.

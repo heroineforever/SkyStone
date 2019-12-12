@@ -11,6 +11,8 @@ public class ThirdSkyStone extends org.firstinspires.ftc.teamcode.Autonomous.Aut
     @Override
     public void runOpMode() {
 
+        super.runOpMode();
+
         waitForStart();
 
         //Strafe right 1 second.

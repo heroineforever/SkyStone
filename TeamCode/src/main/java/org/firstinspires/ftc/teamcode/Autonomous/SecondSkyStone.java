@@ -11,6 +11,8 @@ public class SecondSkyStone extends org.firstinspires.ftc.teamcode.Autonomous.Au
     @Override
     public void runOpMode() {
 
+        super.runOpMode();
+
         waitForStart();
 
         ////strafe right 1 second.
