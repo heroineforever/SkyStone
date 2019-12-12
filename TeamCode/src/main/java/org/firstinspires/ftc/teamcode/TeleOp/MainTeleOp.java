@@ -84,13 +84,17 @@ public class MainTeleOp extends OpMode {
         //telemetry.addData("Left Drive Position", robot.leftBack.getCurrentPosition());
         //telemetry.addData("Right Drive Position", robot.rightBack.getCurrentPosition());
 
-        //greenWheelRight.setPower(1);
-        //greenWheelLeft.setPower(-1);
+        greenWheelRight.setPower(1);
+        greenWheelLeft.setPower(-1);
 
         telemetry.addData("Left Back Power", robot.leftBack.getPower());
         telemetry.addData("Left Front Power", robot.leftFront.getPower());
         telemetry.addData("Right Back Power", robot.rightBack.getPower());
         telemetry.addData("Right Front Power", robot.rightFront.getPower());
+
+        telemetry.addData("Lift Encoder", robot.verticalLift.getCurrentPosition());
+        telemetry.addData("Horizontal Encoder", robot.horizontalLift.getCurrentPosition());
+        telemetry.addData("Horizontal Encoder", robot.horizontalLift.getPower());
 
         telemetry.addData("Left JoyStick Y", gamepad1.left_stick_y);
         telemetry.addData("Right JoyStick X", gamepad1.right_stick_x);
