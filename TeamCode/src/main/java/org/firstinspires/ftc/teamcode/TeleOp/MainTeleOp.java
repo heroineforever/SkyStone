@@ -62,6 +62,8 @@ public class MainTeleOp extends OpMode {
         //extrusionL = robot.extrusionL;
         //extrusionR = robot.extrusionR;
 
+        robot.resetDriveEncoders();
+
         //Set starting position for arm servo
         arm.setPosition(Servo.MAX_POSITION);
         platformR.setPosition(Servo.MIN_POSITION);
