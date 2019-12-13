@@ -17,10 +17,9 @@ import java.lang.Math;
     .getMode() exists
  */
 @TeleOp(name = "Testing TeleOp", group = "Linear Opmode")
-//@Disabled
 
 /**
- * MainTeleOp is the class responsible for all of the TeleOp methods. It has a robot, movement. rotation, strafe, four motors, and a servo
+ * MainTeleOp is the class responsible for all of the TeleOp methods. It has a robot, movement, rotation, strafe, eight motors, and five servos
  */
 public class MainTeleOp extends OpMode {
 
@@ -40,11 +39,13 @@ public class MainTeleOp extends OpMode {
 
 
     @Override
-    //initialize
+    /**
+     * Initializes the robot by mapping the hardware, resetting encoders, and setting servos to the correct starting positions
+     */
     public void init() {
-        //map hardware
+        //Map hardware
         robot = new Hardware(hardwareMap);
-        //Assign the motors and servos to the ones on the robot to not require
+        //Assign the motors and servos to the ones on the robot to not require calling robot everytime a method or servo needs to be called.
         leftFront = robot.leftFront;
         rightFront = robot.rightFront;
         rightBack = robot.rightBack;
@@ -62,6 +63,7 @@ public class MainTeleOp extends OpMode {
         //extrusionL = robot.extrusionL;
         //extrusionR = robot.extrusionR;
 
+        //Sets encoders back to 0 so that they are not messed up.
         robot.resetDriveEncoders();
 
         //Set starting position for arm servo
@@ -70,26 +72,32 @@ public class MainTeleOp extends OpMode {
         platformL.setPosition(Servo.MAX_POSITION);
 
 
+        //Variable to track time for running robot on time if needed
         //ElapsedTime runtime = new ElapsedTime();
     }
 
-    //Code that runs repeatedly
     @Override
+    /**
+     * Runs the main methods of TeleOp and telemetry.
+     * Loop repeats so that it is checking controllers and telemetry values at all times for continuous running
+     */
     public void loop() {
+        //Methods responsible for control of different parts of the the robot
         DriveControl();
         ArmControl();
         LiftControl();
         PlatformControl();
-        //
-        // Test();
-        //Intake();
-        //VerticalLiftControl();
-        //telemetry.addData("Left Drive Position", robot.leftBack.getCurrentPosition());
-        //telemetry.addData("Right Drive Position", robot.rightBack.getCurrentPosition());
 
+        //Possible Methods
+        /* Test();
+           Intake();
+           VerticalLiftControl();*/
+
+        //Intake wheels should be running at all times so that the builders
         greenWheelRight.setPower(0.9);
         greenWheelLeft.setPower(-0.9);
         //horizontalLift.setPower(0.2);
+        //TODO ask about horizontal lift constant motion && the specificity of the compliance wheels
 
         telemetry.addData("Rotation Times", verticalLift.getCurrentPosition());
         telemetry.addData("Left Back Power", robot.leftBack.getPower());
@@ -104,8 +112,12 @@ public class MainTeleOp extends OpMode {
         telemetry.addData("Left JoyStick Y", gamepad1.left_stick_y);
         telemetry.addData("Right JoyStick X", gamepad1.right_stick_x);
 
-        //telemetry.addData("Arm Position", robot.arm.getPosition());
+        //Possible Telemetrys
+        /* telemetry.addData("Arm Position", robot.arm.getPosition());
+           telemetry.addData("Left Drive Position", robot.leftBack.getCurrentPosition());
+           telemetry.addData("Right Drive Position", robot.rightBack.getCurrentPosition());*/
 
+        //Show Telemetry on Driver Station Phone
         telemetry.update();
     }
 

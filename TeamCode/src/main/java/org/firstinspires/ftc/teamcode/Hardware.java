@@ -28,11 +28,13 @@ public class Hardware {
     //Camera
     public WebcamName cameraName;
 
-    public Servo gate;// extrusionL, extrusionR;
+    //TODO ask if gate is a servo that exists
+    public Servo gate;
 
     /*
     Extra motors and servos in case we add them later on
         public DcMotor verticalIntake, horizontalIntake;
+         public Servo extrusionL, extrusionR;
      */
 
     /**
@@ -65,13 +67,13 @@ public class Hardware {
         //SkyBlock Holders
         constrictL = hwmp.servo.get("Constriction Left");
         //constrictR = hwmp.servo.get("Constriction Right");
+        //TODO ask why constrictR was commented out
 
         //Camera
         cameraName = hwmp.get(WebcamName.class, "Webcam");
 
         gate = hwmp.servo.get("Gate");
-        //extrusionL = hwmp.servo.get("Extrusion Left");
-        //extrusionR = hwmp.servo.get("Extrusion Right");
+
 
         /*
         Extra motors and servos in case we add them later on
@@ -80,13 +82,15 @@ public class Hardware {
             liftServo = hwmp.servo.get("Lift Servo");
             gate = hwmp.servo.get("Gate");
             extrusion = hwmp.servo.get("Extrusion Servo");
+            extrusionL = hwmp.servo.get("Extrusion Left");
+            extrusionR = hwmp.servo.get("Extrusion Right");
          */
 
         //Flips motors because they are placed in the opposite direction on the robot---allows for all motors to move in the same direction for one value
         rightBack.setDirection(DcMotor.Direction.REVERSE);
         rightFront.setDirection(DcMotor.Direction.REVERSE);
-     /*   leftFront.setDirection(DcMotor.Direction.REVERSE);
-        leftBack.setDirection(DcMotor.Direction.REVERSE);*/
+        //leftFront.setDirection(DcMotor.Direction.REVERSE);
+        //leftBack.setDirection(DcMotor.Direction.REVERSE);
 
         //Set all servo directions
         arm.setDirection(Servo.Direction.FORWARD);
