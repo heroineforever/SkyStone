@@ -35,7 +35,7 @@ public class MainTeleOp extends OpMode {
 
     //Define the Motors and Servos here to not rely on referencing the robot variable to access the motors and servos
     DcMotor leftFront, rightFront, leftBack, rightBack, greenWheelLeft, greenWheelRight, horizontalLift, verticalLift;
-    Servo arm, platformL, platformR, constrictL, gate; //extrusionL, extrusionR;
+    Servo arm, platformL, platformR, constrictL, gate, pusher; //extrusionL, extrusionR;
 
 
     @Override
@@ -50,6 +50,7 @@ public class MainTeleOp extends OpMode {
         rightFront = robot.rightFront;
         rightBack = robot.rightBack;
         leftBack = robot.leftBack;
+        pusher = robot.pusher;
         arm = robot.arm;
         greenWheelLeft = robot.greenWheelLeft;
         greenWheelRight = robot.greenWheelRight;
@@ -324,8 +325,9 @@ public class MainTeleOp extends OpMode {
         double lt = gamepad2.left_trigger;
 
         //INFO Do constriction and close gate.=
-        if (rt > 0.2) {
-            robot.gate.setPosition(1);
+        if (rt > 0) {
+            pusher.setPosition(1);
+            /*robot.gate.setPosition(1);
             //Delay 0.8 second
             Handler h = new Handler();
             Runnable r = new Runnable() {
@@ -334,11 +336,12 @@ public class MainTeleOp extends OpMode {
                     robot.constrictL.setPosition(1);
                 }
             };
-            h.postDelayed(r, 800);
+            h.postDelayed(r, 800);*/
         } //INFO Undo constriction and open gate.
-        else if (lt > 0.2) {
-        //else if (gamepad2.x) {
-            robot.gate.setPosition(0);
+        else if (lt > 0) {
+            pusher.setPosition(0);
+//else if (gamepad2.x) {
+            /*robot.gate.setPosition(0);
             //Delay 0.8 second
             Handler h = new Handler();
             Runnable r = new Runnable() {
@@ -347,7 +350,7 @@ public class MainTeleOp extends OpMode {
                     robot.constrictL.setPosition(0);
                 }
             };
-            h.postDelayed(r, 800);
+            h.postDelayed(r, 800);*/
         }
 
 

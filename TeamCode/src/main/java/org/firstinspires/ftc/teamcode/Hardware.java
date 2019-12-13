@@ -31,6 +31,9 @@ public class Hardware {
     //TODO ask if gate is a servo that exists
     public Servo gate;
 
+    //Arm mechanism to push in the brick further
+    public Servo pusher;
+
     /*
     Extra motors and servos in case we add them later on
         public DcMotor verticalIntake, horizontalIntake;
@@ -56,6 +59,7 @@ public class Hardware {
         //Lift
         horizontalLift = hwmp.dcMotor.get("Horizontal Lift");
         verticalLift = hwmp.dcMotor.get("Vertical Lift");
+        pusher = hwmp.servo.get("Pusher");
 
         //Arm
         arm = hwmp.servo.get("Arm");
