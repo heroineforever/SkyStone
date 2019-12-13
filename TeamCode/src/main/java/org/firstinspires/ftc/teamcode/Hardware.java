@@ -24,7 +24,7 @@ public class Hardware {
     //Platform
     public Servo platformL, platformR;
     //SkyBlock Holders
-    public Servo constrictL, constrictR;
+    public Servo constrictL;
     //Camera
     public WebcamName cameraName;
 
@@ -64,7 +64,7 @@ public class Hardware {
 
         //SkyBlock Holders
         constrictL = hwmp.servo.get("Constriction Left");
-        constrictR = hwmp.servo.get("Constriction Right");
+        //constrictR = hwmp.servo.get("Constriction Right");
 
         //Camera
         cameraName = hwmp.get(WebcamName.class, "Webcam");
@@ -91,7 +91,7 @@ public class Hardware {
         //Set all servo directions
         arm.setDirection(Servo.Direction.FORWARD);
         constrictL.setDirection(Servo.Direction.FORWARD);
-        constrictR.setDirection(Servo.Direction.FORWARD);
+        //constrictR.setDirection(Servo.Direction.FORWARD);
         platformL.setDirection(Servo.Direction.FORWARD);
         platformR.setDirection(Servo.Direction.FORWARD);
 
@@ -143,7 +143,7 @@ public class Hardware {
 
         //Servos
         arm.setPosition(0);
-        constrictR.setPosition(0);
+        //constrictR.setPosition(0);
         constrictL.setPosition(0);
         platformR.setPosition(0);
         platformL.setPosition(0);

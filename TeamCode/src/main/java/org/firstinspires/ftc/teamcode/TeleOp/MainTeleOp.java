@@ -36,7 +36,7 @@ public class MainTeleOp extends OpMode {
 
     //Define the Motors and Servos here to not rely on referencing the robot variable to access the motors and servos
     DcMotor leftFront, rightFront, leftBack, rightBack, greenWheelLeft, greenWheelRight, horizontalLift, verticalLift;
-    Servo arm, platformL, platformR, constrictL, constrictR, gate; //extrusionL, extrusionR;
+    Servo arm, platformL, platformR, constrictL, gate; //extrusionL, extrusionR;
 
 
     @Override
@@ -57,7 +57,7 @@ public class MainTeleOp extends OpMode {
         platformL = robot.platformL;
         platformR = robot.platformR;
         constrictL = robot.constrictL;
-        constrictR = robot.constrictR;
+        //constrictR = robot.constrictR;
         gate = robot.gate;
         //extrusionL = robot.extrusionL;
         //extrusionR = robot.extrusionR;
@@ -68,6 +68,7 @@ public class MainTeleOp extends OpMode {
         arm.setPosition(Servo.MAX_POSITION);
         platformR.setPosition(Servo.MIN_POSITION);
         platformL.setPosition(Servo.MAX_POSITION);
+
 
         //ElapsedTime runtime = new ElapsedTime();
     }
@@ -86,9 +87,11 @@ public class MainTeleOp extends OpMode {
         //telemetry.addData("Left Drive Position", robot.leftBack.getCurrentPosition());
         //telemetry.addData("Right Drive Position", robot.rightBack.getCurrentPosition());
 
-        greenWheelRight.setPower(1);
-        greenWheelLeft.setPower(-1);
+        greenWheelRight.setPower(0.9);
+        greenWheelLeft.setPower(-0.9);
+        //horizontalLift.setPower(0.2);
 
+        telemetry.addData("Rotation Times", verticalLift.getCurrentPosition());
         telemetry.addData("Left Back Power", robot.leftBack.getPower());
         telemetry.addData("Left Front Power", robot.leftFront.getPower());
         telemetry.addData("Right Back Power", robot.rightBack.getPower());
@@ -295,13 +298,14 @@ public class MainTeleOp extends OpMode {
 
         //README intakes
         robot.horizontalLift.setPower(horizontal);
-        robot.verticalLift.setPower(vertical);
+        robot.verticalLift.setPower((verticalLift.getCurrentPosition() < -300
+                || verticalLift.getCurrentPosition() > 2260) ? 0 : vertical);
 
         //README Suction wheels
         /*robot.greenWheelLeft.setPower(1);
         robot.greenWheelRight.setPower(1);*/
-        robot.greenWheelLeft.setPower((gamepad2.y) ? -1 : 0);
-        robot.greenWheelRight.setPower((gamepad2.y) ? -1 : 0);
+        /*robot.greenWheelLeft.setPower((gamepad2.y) ? -1 : 0);
+        robot.greenWheelRight.setPower((gamepad2.y) ? -1 : 0);*/
 //aa
         //README Gate open/close using triggers and constriction.
         double rt = gamepad2.right_trigger;
@@ -315,7 +319,6 @@ public class MainTeleOp extends OpMode {
             Runnable r = new Runnable() {
                 @Override
                 public void run() {
-                    robot.constrictR.setPosition(1);
                     robot.constrictL.setPosition(1);
                 }
             };
@@ -329,7 +332,6 @@ public class MainTeleOp extends OpMode {
             Runnable r = new Runnable() {
                 @Override
                 public void run() {
-                    robot.constrictR.setPosition(0);
                     robot.constrictL.setPosition(0);
                 }
             };

@@ -152,7 +152,7 @@ public class Autonomous extends LinearOpMode {
         // in the frame to make the prediction.
     }
 
-    public void rotate(boolean right, double time){
+    public void rotate(boolean right, double time) {
         //TODO HAVE TO WRITE THIS FUNCTION
     }
 
