@@ -95,8 +95,8 @@ public class MainTeleOp extends OpMode {
            VerticalLiftControl();*/
 
         //Intake wheels should be running at all times so that the builders
-        greenWheelRight.setPower(0.9);
-        greenWheelLeft.setPower(-0.9);
+        greenWheelRight.setPower(0.1);
+        greenWheelLeft.setPower(-0.1);
         //horizontalLift.setPower(0.2);
         //TODO ask about horizontal lift constant motion && the specificity of the compliance wheels
 
@@ -375,9 +375,9 @@ public class MainTeleOp extends OpMode {
     boolean up = true;
 
     public void ArmControl() {
-        if(gamepad1.x)
+        if(gamepad2.x)
             arm.setPosition(Servo.MAX_POSITION);
-        if(gamepad1.y)
+        if(gamepad2.y)
             arm.setPosition(Servo.MIN_POSITION);
 
 
