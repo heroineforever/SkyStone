@@ -63,7 +63,6 @@ public class Autonomous extends LinearOpMode {
     protected static final int COUNTS_PER_REV_CORE = 288;
     protected static final double TURN_DISTANCE_PER_DEGREE = Math.sqrt(1560.49) * Math.PI / 360 / 2;
 
-
     @Override
     public void runOpMode() {
         robot = new Hardware(hardwareMap);
@@ -71,6 +70,8 @@ public class Autonomous extends LinearOpMode {
         rightFront = robot.rightFront;
         leftBack = robot.leftBack;
         rightBack = robot.rightBack;
+        platformL = robot.platformL;
+        platformR = robot.platformR;
         arm = robot.arm;
 
         telemetry.addData("Motor Status", rightBack == null);
@@ -152,8 +153,25 @@ public class Autonomous extends LinearOpMode {
         // in the frame to make the prediction.
     }
 
-    public void rotate(boolean right, double time) {
-        //TODO HAVE TO WRITE THIS FUNCTION
+
+    public void rotate(boolean right, double time, double power) {
+        if(right)
+        {
+            rightFront.setPower(-1*power);
+            rightBack.setPower(-1*power);
+            leftFront.setPower(1*power);
+            leftBack.setPower(1*power);
+        }
+        else
+        {
+            rightFront.setPower(1*power);
+            rightBack.setPower(1*power);
+            leftFront.setPower(-1*power);
+            leftBack.setPower(-1*power);
+        }
+
+            waitFor(time);
+            StopDriveMotors();
     }
 
     public void strafe(double vertical, double horizontal, double power, double time) {

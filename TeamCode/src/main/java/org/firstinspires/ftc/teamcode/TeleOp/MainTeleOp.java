@@ -34,7 +34,7 @@ public class MainTeleOp extends OpMode {
     double strafe;
 
     //Define the Motors and Servos here to not rely on referencing the robot variable to access the motors and servos
-    DcMotor leftFront, rightFront, leftBack, rightBack, greenWheelLeft, greenWheelRight, horizontalLift, verticalLift;
+    DcMotor leftFront, rightFront, leftBack, rightBack, greenWheelLeft, /*greenWheelRight,*/ horizontalLift, verticalLift;
     Servo arm, platformL, platformR, constrictL, gate, pusher; //extrusionL, extrusionR;
 
 
@@ -53,7 +53,7 @@ public class MainTeleOp extends OpMode {
         pusher = robot.pusher;
         arm = robot.arm;
         greenWheelLeft = robot.greenWheelLeft;
-        greenWheelRight = robot.greenWheelRight;
+        //greenWheelRight = robot.greenWheelRight;
         horizontalLift = robot.horizontalLift;
         verticalLift = robot.verticalLift;
         platformL = robot.platformL;
@@ -71,6 +71,7 @@ public class MainTeleOp extends OpMode {
         arm.setPosition(Servo.MAX_POSITION);
         platformR.setPosition(Servo.MIN_POSITION);
         platformL.setPosition(Servo.MAX_POSITION);
+        constrictL.setPosition(Servo.MAX_POSITION);
 
 
         //Variable to track time for running robot on time if needed
@@ -88,35 +89,41 @@ public class MainTeleOp extends OpMode {
         ArmControl();
         LiftControl();
         PlatformControl();
+        Intake();
 
         //Possible Methods
         /* Test();
-           Intake();
            VerticalLiftControl();*/
 
         //Intake wheels should be running at all times so that the builders
-        greenWheelRight.setPower(0.1);
-        greenWheelLeft.setPower(-0.1);
+
         //horizontalLift.setPower(0.2);
         //TODO ask about horizontal lift constant motion && the specificity of the compliance wheels
 
         telemetry.addData("Rotation Times", verticalLift.getCurrentPosition());
-        telemetry.addData("Left Back Power", robot.leftBack.getPower());
-        telemetry.addData("Left Front Power", robot.leftFront.getPower());
-        telemetry.addData("Right Back Power", robot.rightBack.getPower());
-        telemetry.addData("Right Front Power", robot.rightFront.getPower());
 
-        telemetry.addData("Lift Encoder", robot.verticalLift.getCurrentPosition());
-        telemetry.addData("Horizontal Encoder", robot.horizontalLift.getCurrentPosition());
-        telemetry.addData("Horizontal Encoder", robot.horizontalLift.getPower());
+        telemetry.addData("Lift Encoder", verticalLift.getCurrentPosition());
+        telemetry.addData("Horizontal Encoder", horizontalLift.getCurrentPosition());
+        telemetry.addData("Horizontal Power", horizontalLift.getPower());
 
-        telemetry.addData("Left JoyStick Y", gamepad1.left_stick_y);
-        telemetry.addData("Right JoyStick X", gamepad1.right_stick_x);
+        //telemetry.addData("Right Wheel Motor Power", greenWheelRight.getPower());
+        telemetry.addData("Left Wheel Motor Power", greenWheelLeft.getPower());
+        //telemetry.addData("Right Wheel Motor Encoder", greenWheelRight.getCurrentPosition());
+        //telemetry.addData("Left Wheel Motor Encoder", greenWheelLeft.getCurrentPosition());
+
+        telemetry.addData("Servo :((", constrictL.getPosition());
+
 
         //Possible Telemetrys
         /* telemetry.addData("Arm Position", robot.arm.getPosition());
            telemetry.addData("Left Drive Position", robot.leftBack.getCurrentPosition());
-           telemetry.addData("Right Drive Position", robot.rightBack.getCurrentPosition());*/
+           telemetry.addData("Right Drive Position", robot.rightBack.getCurrentPosition());
+           telemetry.addData("Left JoyStick Y", gamepad1.left_stick_y);
+           telemetry.addData("Right JoyStick X", gamepad1.right_stick_x);
+           telemetry.addData("Left Back Power", robot.leftBack.getPower());
+           telemetry.addData("Left Front Power", robot.leftFront.getPower());
+           telemetry.addData("Right Back Power", robot.rightBack.getPower());
+           telemetry.addData("Right Front Power", robot.rightFront.getPower());*/
 
         //Show Telemetry on Driver Station Phone
         telemetry.update();
@@ -129,6 +136,27 @@ public class MainTeleOp extends OpMode {
         rightFront.setPower(.5);
         leftBack.setPower(.5);
         leftFront.setPower(.5);
+    }
+
+    public void Intake(){
+        boolean forward = true;
+        double speed = 1;
+        double spit = 1;
+        if(gamepad2.a)
+            forward = false;
+        else
+            forward = true;
+        if(forward)
+        {
+            //greenWheelRight.setPower(speed);
+            greenWheelLeft.setPower(-1*speed);
+        }
+        else
+        {
+            //greenWheelRight.setPower(-1*spit);
+            greenWheelLeft.setPower(spit);
+        }
+
     }
 
     public void DriveControl() {
@@ -311,8 +339,9 @@ public class MainTeleOp extends OpMode {
 
         //README intakes
         robot.horizontalLift.setPower(horizontal);
-        robot.verticalLift.setPower((verticalLift.getCurrentPosition() < -300
-                || verticalLift.getCurrentPosition() > 2260) ? 0 : vertical);
+        //robot.verticalLift.setPower((verticalLift.getCurrentPosition() < -300
+                //|| verticalLift.getCurrentPosition() > 2260) ? 0 : vertical);
+        robot.verticalLift.setPower(vertical);
 
         //README Suction wheels
         /*robot.greenWheelLeft.setPower(1);
@@ -353,13 +382,18 @@ public class MainTeleOp extends OpMode {
             h.postDelayed(r, 800);*/
         }
 
+        if(gamepad2.dpad_up)
+            constrictL.setPosition(Servo.MIN_POSITION);
+        if(gamepad2.dpad_down)
+            constrictL.setPosition(Servo.MAX_POSITION);
+
 
         if (gamepad2.dpad_left)
             robot.horizontalLift.setPower(-.7);
-        else if (gamepad1.dpad_right)
+        else if (gamepad2.dpad_right)
             robot.horizontalLift.setPower(.7);
-        else
-            robot.horizontalLift.setPower(0);
+        //else
+            //robot.horizontalLift.setPower(0);
     }
 
     //Function for handling vertical lift
