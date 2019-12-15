@@ -43,16 +43,18 @@ public class Platform extends org.firstinspires.ftc.teamcode.Autonomous.Autonomo
         waitFor(0.5);
         stop();*/
 
-        strafe(1, 0, 1, 2.5);
-        waitFor(0.5);
+        strafe(1, 0.3, 1, 2);
+        waitFor(2);
         platformR.setPosition(Servo.MAX_POSITION);
         platformL.setPosition(Servo.MIN_POSITION);
-        waitFor(0.5);
+        waitFor(2);
         strafe(-1, 0, 1, 2.4);
-        waitFor(0.5);
+        waitFor(2);
+        rotate(false, 2, 1);
+        waitFor(2);
         platformR.setPosition(Servo.MIN_POSITION);
         platformL.setPosition(Servo.MAX_POSITION);
-        waitFor(0.5);
+        waitFor(2);
         strafe(0, 1, 1, 1.5);
         stop();
 

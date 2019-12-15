@@ -16,7 +16,7 @@ public class Hardware {
     //Drive Train
     public DcMotor leftFront, rightFront, rightBack, leftBack;
     //Intake
-    public DcMotor greenWheelLeft; //greenWheelRight;
+    public DcMotor greenWheelLeft, greenWheelRight;
     //Lift
     public DcMotor horizontalLift, verticalLift;
     //Arm
@@ -54,7 +54,7 @@ public class Hardware {
 
         //Intake
         greenWheelLeft = hwmp.dcMotor.get("Green Wheel Left");
-        //greenWheelRight = hwmp.dcMotor.get("Green Wheel Right");
+        greenWheelRight = hwmp.dcMotor.get("Green Wheel Right");
 
         //Lift
         horizontalLift = hwmp.dcMotor.get("Horizontal Lift");
@@ -101,6 +101,7 @@ public class Hardware {
         //constrictR.setDirection(Servo.Direction.FORWARD);
         platformL.setDirection(Servo.Direction.FORWARD);
         platformR.setDirection(Servo.Direction.FORWARD);
+        pusher.setDirection(Servo.Direction.FORWARD);
 
     }
 
@@ -127,7 +128,7 @@ public class Hardware {
         rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         horizontalLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         verticalLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        //greenWheelRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        greenWheelRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         greenWheelLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
     }
