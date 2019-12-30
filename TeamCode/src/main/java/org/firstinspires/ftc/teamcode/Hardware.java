@@ -20,6 +20,8 @@ public class Hardware {
     //Lift
     public DcMotor horizontalLift, verticalLift;
     //Arm
+    //public Servo armLift;
+    //public Servo armClamp;
     public Servo arm;
     //Platform
     public Servo platformL, platformR;
