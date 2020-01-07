@@ -17,10 +17,9 @@ import java.lang.Math;
     .getMode() exists
  */
 @TeleOp(name = "Testing TeleOp", group = "Linear Opmode")
-//@Disabled
 
 /**
- * MainTeleOp is the class responsible for all of the TeleOp methods. It has a robot, movement. rotation, strafe, four motors, and a servo
+ * MainTeleOp is the class responsible for all of the TeleOp methods. It has a robot, movement, rotation, strafe, eight motors, and five servos
  */
 public class MainTeleOp extends OpMode {
 
@@ -36,19 +35,22 @@ public class MainTeleOp extends OpMode {
 
     //Define the Motors and Servos here to not rely on referencing the robot variable to access the motors and servos
     DcMotor leftFront, rightFront, leftBack, rightBack, greenWheelLeft, greenWheelRight, horizontalLift, verticalLift;
-    Servo arm, platformL, platformR, constrictL, constrictR, gate; //extrusionL, extrusionR;
+    Servo arm, platformL, platformR, constrictL, gate, pusher; //extrusionL, extrusionR;
 
 
     @Override
-    //initialize
+    /**
+     * Initializes the robot by mapping the hardware, resetting encoders, and setting servos to the correct starting positions
+     */
     public void init() {
-        //map hardware
+        //Map hardware
         robot = new Hardware(hardwareMap);
-        //Assign the motors and servos to the ones on the robot to not require
+        //Assign the motors and servos to the ones on the robot to not require calling robot everytime a method or servo needs to be called.
         leftFront = robot.leftFront;
         rightFront = robot.rightFront;
         rightBack = robot.rightBack;
         leftBack = robot.leftBack;
+        pusher = robot.pusher;
         arm = robot.arm;
         greenWheelLeft = robot.greenWheelLeft;
         greenWheelRight = robot.greenWheelRight;
@@ -57,46 +59,74 @@ public class MainTeleOp extends OpMode {
         platformL = robot.platformL;
         platformR = robot.platformR;
         constrictL = robot.constrictL;
-        constrictR = robot.constrictR;
+        //constrictR = robot.constrictR;
         gate = robot.gate;
         //extrusionL = robot.extrusionL;
         //extrusionR = robot.extrusionR;
+
+        //Sets encoders back to 0 so that they are not messed up.
+        robot.resetDriveEncoders();
 
         //Set starting position for arm servo
         arm.setPosition(Servo.MAX_POSITION);
         platformR.setPosition(Servo.MIN_POSITION);
         platformL.setPosition(Servo.MAX_POSITION);
+        constrictL.setPosition(Servo.MIN_POSITION);
+        pusher.setPosition(Servo.MAX_POSITION);
 
+
+        //Variable to track time for running robot on time if needed
         //ElapsedTime runtime = new ElapsedTime();
     }
 
-    //Code that runs repeatedly
     @Override
+    /**
+     * Runs the main methods of TeleOp and telemetry.
+     * Loop repeats so that it is checking controllers and telemetry values at all times for continuous running
+     */
     public void loop() {
+        //Methods responsible for control of different parts of the the robot
         DriveControl();
         ArmControl();
         LiftControl();
         PlatformControl();
-        //
-        // Test();
-        //Intake();
-        //VerticalLiftControl();
-        //telemetry.addData("Left Drive Position", robot.leftBack.getCurrentPosition());
-        //telemetry.addData("Right Drive Position", robot.rightBack.getCurrentPosition());
+        Intake();
 
-        //greenWheelRight.setPower(1);
-        //greenWheelLeft.setPower(-1);
+        //Possible Methods
+        /* Test();
+           VerticalLiftControl();*/
 
-        telemetry.addData("Left Back Power", robot.leftBack.getPower());
-        telemetry.addData("Left Front Power", robot.leftFront.getPower());
-        telemetry.addData("Right Back Power", robot.rightBack.getPower());
-        telemetry.addData("Right Front Power", robot.rightFront.getPower());
+        //Intake wheels should be running at all times so that the builders
 
-        telemetry.addData("Left JoyStick Y", gamepad1.left_stick_y);
-        telemetry.addData("Right JoyStick X", gamepad1.right_stick_x);
+        //horizontalLift.setPower(0.2);
+        //TODO ask about horizontal lift constant motion && the specificity of the compliance wheels
 
-        //telemetry.addData("Arm Position", robot.arm.getPosition());
+        telemetry.addData("Rotation Times", verticalLift.getCurrentPosition());
 
+        telemetry.addData("Lift Encoder", verticalLift.getCurrentPosition());
+        telemetry.addData("Horizontal Encoder", horizontalLift.getCurrentPosition());
+        telemetry.addData("Horizontal Power", horizontalLift.getPower());
+
+        telemetry.addData("Right Wheel Motor Power", greenWheelRight.getPower());
+        telemetry.addData("Left Wheel Motor Power", greenWheelLeft.getPower());
+        //telemetry.addData("Right Wheel Motor Encoder", greenWheelRight.getCurrentPosition());
+        //telemetry.addData("Left Wheel Motor Encoder", greenWheelLeft.getCurrentPosition());
+
+        telemetry.addData("Servo :((", constrictL.getPosition());
+
+
+        //Possible Telemetrys
+        /* telemetry.addData("Arm Position", robot.arm.getPosition());
+           telemetry.addData("Left Drive Position", robot.leftBack.getCurrentPosition());
+           telemetry.addData("Right Drive Position", robot.rightBack.getCurrentPosition());
+           telemetry.addData("Left JoyStick Y", gamepad1.left_stick_y);
+           telemetry.addData("Right JoyStick X", gamepad1.right_stick_x);
+           telemetry.addData("Left Back Power", robot.leftBack.getPower());
+           telemetry.addData("Left Front Power", robot.leftFront.getPower());
+           telemetry.addData("Right Back Power", robot.rightBack.getPower());
+           telemetry.addData("Right Front Power", robot.rightFront.getPower());*/
+
+        //Show Telemetry on Driver Station Phone
         telemetry.update();
     }
 
@@ -107,6 +137,43 @@ public class MainTeleOp extends OpMode {
         rightFront.setPower(.5);
         leftBack.setPower(.5);
         leftFront.setPower(.5);
+    }
+
+    public void Intake(){
+        boolean forward = true;
+        boolean beginning = true;
+        double speed = 0.7;
+        double spit = 1;
+        if(gamepad2.b)
+        {
+            beginning=false;
+        }
+        if(beginning)
+        {
+            /*greenWheelRight.setPower(-1*spit);
+            greenWheelLeft.setPower(spit);*/
+            greenWheelRight.setPower(spit);
+            greenWheelLeft.setPower(-1*spit);
+        }
+        if(gamepad2.a)
+            forward = false;
+        else
+            forward = true;
+        if(!beginning && forward)
+        {
+            /*greenWheelRight.setPower(speed);
+            greenWheelLeft.setPower(-1*speed);*/
+            greenWheelRight.setPower(-1*speed);
+            greenWheelLeft.setPower(speed);
+        }
+        else if(!beginning && !forward)
+        {
+            /*greenWheelRight.setPower(-1*spit);
+            greenWheelLeft.setPower(spit);*/
+            greenWheelRight.setPower(spit);
+            greenWheelLeft.setPower(-1*spit);
+        }
+
     }
 
     public void DriveControl() {
@@ -285,58 +352,68 @@ public class MainTeleOp extends OpMode {
     public void LiftControl() {
 
         double vertical = gamepad2.left_stick_y;
-        double horizontal = gamepad2.right_stick_y;
+        double horizontal = gamepad2.right_stick_x;
 
         //README intakes
         robot.horizontalLift.setPower(horizontal);
+        //robot.verticalLift.setPower((verticalLift.getCurrentPosition() < -300
+                //|| verticalLift.getCurrentPosition() > 2260) ? 0 : vertical);
         robot.verticalLift.setPower(vertical);
 
         //README Suction wheels
-        /*robot.greenWheelLeft.setPower(1);
-        robot.greenWheelRight.setPower(1);*/
-        robot.greenWheelLeft.setPower((gamepad2.y) ? -1 : 0);
-        robot.greenWheelRight.setPower((gamepad2.y) ? -1 : 0);
+        /*robot.greenWheelLeft.setPower(0.1);
+        robot.greenWheelRight.setPower(0.1);
+
+        robot.greenWheelLeft.setPower(0.1);
+        robot.greenWheelRight.setPower(0.1);*/
+        /*robot.greenWheelLeft.setPower((gamepad2.y) ? -1 : 0);
+        robot.greenWheelRight.setPower((gamepad2.y) ? -1 : 0);*/
 //aa
         //README Gate open/close using triggers and constriction.
-        double rt = gamepad2.right_trigger;
-        double lt = gamepad2.left_trigger;
+
 
         //INFO Do constriction and close gate.=
-        if (rt > 0.2) {
-            robot.gate.setPosition(1);
+        if (gamepad2.dpad_left)
+            pusher.setPosition(Servo.MAX_POSITION);
+        if(gamepad2.dpad_right)
+            pusher.setPosition(Servo.MIN_POSITION);
+            /*robot.gate.setPosition(1);
             //Delay 0.8 second
             Handler h = new Handler();
             Runnable r = new Runnable() {
                 @Override
                 public void run() {
-                    robot.constrictR.setPosition(1);
                     robot.constrictL.setPosition(1);
                 }
             };
-            h.postDelayed(r, 800);
-        } //INFO Undo constriction and open gate.
-        else if (lt > 0.2) {
-        //else if (gamepad2.x) {
-            robot.gate.setPosition(0);
+            h.postDelayed(r, 800);*/
+         //INFO Undo constriction and open gate.
+
+//else if (gamepad2.x) {
+            /*robot.gate.setPosition(0);
             //Delay 0.8 second
             Handler h = new Handler();
             Runnable r = new Runnable() {
                 @Override
                 public void run() {
-                    robot.constrictR.setPosition(0);
                     robot.constrictL.setPosition(0);
                 }
             };
-            h.postDelayed(r, 800);
-        }
+            h.postDelayed(r, 800);*/
 
 
-        if (gamepad2.dpad_left)
-            robot.horizontalLift.setPower(-.7);
-        else if (gamepad1.dpad_right)
-            robot.horizontalLift.setPower(.7);
-        else
-            robot.horizontalLift.setPower(0);
+        if(gamepad2.dpad_up)
+            constrictL.setPosition(Servo.MIN_POSITION);
+        if(gamepad2.dpad_down)
+            constrictL.setPosition(Servo.MAX_POSITION);
+
+
+//        if (gamepad2.dpad_left)
+//            robot.horizontalLift.setPower(-.7);
+//        else if (gamepad2.dpad_right)
+//            robot.horizontalLift.setPower(.7);
+        //else
+            //robot.horizontalLift.setPower(0);
     }
 
     //Function for handling vertical lift
@@ -352,10 +429,11 @@ public class MainTeleOp extends OpMode {
     boolean up = true;
 
     public void ArmControl() {
-        if(gamepad1.x)
+        if(gamepad1.a)
             arm.setPosition(Servo.MAX_POSITION);
-        if(gamepad1.y)
+        if(gamepad1.b)
             arm.setPosition(Servo.MIN_POSITION);
+
 
 
         /*if (gamepad1.x) {
@@ -370,14 +448,13 @@ public class MainTeleOp extends OpMode {
 
     public void PlatformControl()
     {
-        if(gamepad1.a) {
+        if(gamepad1.x) {
             platformR.setPosition(Servo.MAX_POSITION);
             platformL.setPosition(Servo.MIN_POSITION);
         }
-        if(gamepad1.b) {
+        if(gamepad1.y) {
             platformR.setPosition(Servo.MIN_POSITION);
             platformL.setPosition(Servo.MAX_POSITION);
         }
     }
-
 }

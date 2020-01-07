@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 
 
@@ -20,23 +21,34 @@ public class Hardware {
     //Lift
     public DcMotor horizontalLift, verticalLift;
     //Arm
-    public Servo arm;
+    //public Servo armLift;
+    //public Servo armClamp;
+    public Servo stoneGripper;
     //Platform
-    public Servo platformL, platformR;
+    public Servo platform;
     //SkyBlock Holders
-    public Servo constrictL, constrictR;
+    public Servo constrictL;
     //Camera
     public WebcamName cameraName;
 
-    public Servo gate;// extrusionL, extrusionR;
+    //TODO ask if gate is a servo that exists
+    public Servo gate;
 
+    //Arm mechanism to push in the brick further
+    public Servo pusher;
+
+    public Servo suctionPlatformR, suctionPlatformL;
+
+    public Servo armRotate;
     /*
     Extra motors and servos in case we add them later on
         public DcMotor verticalIntake, horizontalIntake;
+         public Servo extrusionL, extrusionR;
      */
 
     /**
      * Creates a new Hardware with all parts connected to a name
+     *
      * @param hwmp map of robot parts on the control hub
      */
     public Hardware(HardwareMap hwmp) {
@@ -52,26 +64,33 @@ public class Hardware {
         greenWheelRight = hwmp.dcMotor.get("Green Wheel Right");
 
         //Lift
-        horizontalLift = hwmp.dcMotor.get("Horizontal Lift");
+        //horizontalLift = hwmp.dcMotor.get("Horizontal Lift");
         verticalLift = hwmp.dcMotor.get("Vertical Lift");
+        pusher = hwmp.servo.get("Stone Pusher");
 
-        //Arm
-        arm = hwmp.servo.get("Arm");
+        //Arm to grip the stone
+        stoneGripper = hwmp.servo.get("Stone Gripper");
+
+        //Suction Platform
+        suctionPlatformL = hwmp.servo.get("Suction Platform Left");
+        suctionPlatformR = hwmp.servo.get("Suction Platform Right");
+
+        //Arm that holds the brick and rotates.
+        armRotate = hwmp.servo.get("Arm Rotate");
 
         //Platform
-        platformL = hwmp.servo.get("Platform Left");
-        platformR = hwmp.servo.get("Platform Right");
+        platform = hwmp.servo.get("Platform");
+        //platformR = hwmp.servo.get("Platform Right");
 
         //SkyBlock Holders
-        constrictL = hwmp.servo.get("Constriction Left");
-        constrictR = hwmp.servo.get("Constriction Right");
+        //constrictL = hwmp.servo.get("Constriction Left");
+        //constrictR = hwmp.servo.get("Constriction Right");
 
         //Camera
         cameraName = hwmp.get(WebcamName.class, "Webcam");
 
         gate = hwmp.servo.get("Gate");
-        //extrusionL = hwmp.servo.get("Extrusion Left");
-        //extrusionR = hwmp.servo.get("Extrusion Right");
+
 
         /*
         Extra motors and servos in case we add them later on
@@ -80,20 +99,27 @@ public class Hardware {
             liftServo = hwmp.servo.get("Lift Servo");
             gate = hwmp.servo.get("Gate");
             extrusion = hwmp.servo.get("Extrusion Servo");
+            extrusionL = hwmp.servo.get("Extrusion Left");
+            extrusionR = hwmp.servo.get("Extrusion Right");
          */
 
         //Flips motors because they are placed in the opposite direction on the robot---allows for all motors to move in the same direction for one value
         rightBack.setDirection(DcMotor.Direction.REVERSE);
         rightFront.setDirection(DcMotor.Direction.REVERSE);
-     /*   leftFront.setDirection(DcMotor.Direction.REVERSE);
-        leftBack.setDirection(DcMotor.Direction.REVERSE);*/
+        //leftFront.setDirection(DcMotor.Direction.REVERSE);
+        //leftBack.setDirection(DcMotor.Direction.REVERSE);
 
         //Set all servo directions
-        arm.setDirection(Servo.Direction.FORWARD);
+        armRotate.setDirection(Servo.Direction.FORWARD);
+        //arm.setDirection(Servo.Direction.FORWARD);
         constrictL.setDirection(Servo.Direction.FORWARD);
-        constrictR.setDirection(Servo.Direction.FORWARD);
-        platformL.setDirection(Servo.Direction.FORWARD);
-        platformR.setDirection(Servo.Direction.FORWARD);
+        //constrictR.setDirection(Servo.Direction.FORWARD);
+        platform.setDirection(Servo.Direction.FORWARD);
+        stoneGripper.setDirection(Servo.Direction.FORWARD);
+        suctionPlatformR.setDirection(Servo.Direction.FORWARD);
+        suctionPlatformR.setDirection(Servo.Direction.FORWARD);
+        //platformR.setDirection(Servo.Direction.FORWARD);
+        pusher.setDirection(Servo.Direction.FORWARD);
 
     }
 
@@ -110,8 +136,8 @@ public class Hardware {
         rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         horizontalLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         verticalLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        greenWheelLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        greenWheelRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //greenWheelLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //greenWheelRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         //Start motors using resetted encoders
         leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -120,8 +146,8 @@ public class Hardware {
         rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         horizontalLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         verticalLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        greenWheelRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        greenWheelLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        greenWheelRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        greenWheelLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
     }
 
@@ -142,12 +168,13 @@ public class Hardware {
         horizontalLift.setPower(0);
 
         //Servos
-        arm.setPosition(0);
-        constrictR.setPosition(0);
+        //arm.setPosition(0);
+        //constrictR.setPosition(0);
         constrictL.setPosition(0);
-        platformR.setPosition(0);
-        platformL.setPosition(0);
-
+        platform.setPosition(0);
+        stoneGripper.setPosition(0);
+        pusher.setPosition(0);
+        armRotate.setPosition(0);
     }
 
 }

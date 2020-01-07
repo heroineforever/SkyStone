@@ -42,8 +42,8 @@ public class Autonomous extends LinearOpMode {
     }
 
     //TensorFlow
-    private static final String TFOD_MODEL_ASSET = "Skystone.tflite";
-    private static final String LABEL_SPECIAL_SKYSTONE = "Special Skystone";
+    protected static final String TFOD_MODEL_ASSET = "Skystone.tflite";
+    protected static final String LABEL_SPECIAL_SKYSTONE = "Special Skystone";
     public Interpreter tflite;
 
     //imute
@@ -53,16 +53,15 @@ public class Autonomous extends LinearOpMode {
     double baseAngle;
 
     //Vuforia stuff
-    private static final String VUFORIA_KEY = "ATKKdVf/////AAABmb9SxtpqfUvxqCFmSowoT10see3Vz9mze+DVTbtqieMNjFxZverOpqc4OYMhAkuv9rnJMQZyuaweuLOXioXqVuYJ2P2yRohAKL//zPiF1drlPCUbzdhh3pFV8X4rnBILwoF9C3gWvpQfB//IJdZXNBkWYOZAp+UXGBW2WGdt2rQFHw4Y23GrGb2XCmPEHynO8tiNb6IzR6vOh/KOZ8GyTVES7+GyMVhFWNqgL969+ra6Ev5mgfDqaIt4DAqOoiMomDF9mm+Ixx7m6R2pwJC69XVvqAE6+fuotOs8fvA2XRtU+NNaD2ALR247keSC3qK0RnH8JGjYbSmiOHuRqHW9p9J/JrG1OPOxKnKuGEhhcgA7";
+    protected static final String VUFORIA_KEY = "ATKKdVf/////AAABmb9SxtpqfUvxqCFmSowoT10see3Vz9mze+DVTbtqieMNjFxZverOpqc4OYMhAkuv9rnJMQZyuaweuLOXioXqVuYJ2P2yRohAKL//zPiF1drlPCUbzdhh3pFV8X4rnBILwoF9C3gWvpQfB//IJdZXNBkWYOZAp+UXGBW2WGdt2rQFHw4Y23GrGb2XCmPEHynO8tiNb6IzR6vOh/KOZ8GyTVES7+GyMVhFWNqgL969+ra6Ev5mgfDqaIt4DAqOoiMomDF9mm+Ixx7m6R2pwJC69XVvqAE6+fuotOs8fvA2XRtU+NNaD2ALR247keSC3qK0RnH8JGjYbSmiOHuRqHW9p9J/JrG1OPOxKnKuGEhhcgA7";
     protected VuforiaLocalizer vuforia;
     //TensorFlow Object detector
     protected TFObjectDetector tfod;
 
     //Constants
-    private static final double COUNTS_PER_INCH_HD_MECANUM = 1120 / Math.PI / 4;
-    private static final int COUNTS_PER_REV_CORE = 288;
-    private static final double TURN_DISTANCE_PER_DEGREE = Math.sqrt(1560.49) * Math.PI / 360 / 2;
-
+    protected static final double COUNTS_PER_INCH_HD_MECANUM = 1120 / Math.PI / 4;
+    protected static final int COUNTS_PER_REV_CORE = 288;
+    protected static final double TURN_DISTANCE_PER_DEGREE = Math.sqrt(1560.49) * Math.PI / 360 / 2;
 
     @Override
     public void runOpMode() {
@@ -71,6 +70,8 @@ public class Autonomous extends LinearOpMode {
         rightFront = robot.rightFront;
         leftBack = robot.leftBack;
         rightBack = robot.rightBack;
+        platformL = robot.platformL;
+        platformR = robot.platformR;
         arm = robot.arm;
 
         telemetry.addData("Motor Status", rightBack == null);
@@ -152,8 +153,25 @@ public class Autonomous extends LinearOpMode {
         // in the frame to make the prediction.
     }
 
-    public void rotate(boolean right, double time){
-        //TODO HAVE TO WRITE THIS FUNCTION
+
+    public void rotate(boolean right, double time, double power) {
+        if(right)
+        {
+            rightFront.setPower(1*(power*.5));
+            rightBack.setPower(1*(power*.5));
+            leftFront.setPower(-1*(power));
+            leftBack.setPower(-1*(power));
+        }
+        else
+        {
+            rightFront.setPower(-1*(power));
+            rightBack.setPower(-1*(power));
+            leftFront.setPower(1*(power*.5));
+            leftBack.setPower(1*(power*.5));
+        }
+
+            waitFor(time);
+            StopDriveMotors();
     }
 
     public void strafe(double vertical, double horizontal, double power, double time) {
