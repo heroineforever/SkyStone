@@ -386,7 +386,6 @@ public class MainTeleOp extends OpMode {
                 //|| verticalLift.getCurrentPosition() > 2260) ? 0 : vertical);
 
 
-        robot.armRotate.setDirection();
         robot.verticalLift.setPower(vertical);
 
         //TODO Move verticalLift by increments when dpad_up and dpad_down pressed.
