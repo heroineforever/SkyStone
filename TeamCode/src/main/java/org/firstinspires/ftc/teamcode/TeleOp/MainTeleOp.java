@@ -35,7 +35,7 @@ public class MainTeleOp extends OpMode {
 
     //Define the Motors and Servos here to not rely on referencing the robot variable to access the motors and servos
     DcMotor leftFront, rightFront, leftBack, rightBack, greenWheelLeft, greenWheelRight, horizontalLift, verticalLift;
-    Servo arm, platformL, platformR, constrictL, gate, pusher; //extrusionL, extrusionR;
+    Servo arm, platform, armRotate, stoneGripper,suctionPlatformR, suctionPlatformL, constrictL, gate, pusher; //extrusionL, extrusionR;
 
 
     @Override
@@ -51,27 +51,34 @@ public class MainTeleOp extends OpMode {
         rightBack = robot.rightBack;
         leftBack = robot.leftBack;
         pusher = robot.pusher;
-        arm = robot.arm;
+        //arm = robot.arm;
         greenWheelLeft = robot.greenWheelLeft;
         greenWheelRight = robot.greenWheelRight;
         horizontalLift = robot.horizontalLift;
         verticalLift = robot.verticalLift;
-        platformL = robot.platformL;
-        platformR = robot.platformR;
+        //platformL = robot.platformL;
+        platform = robot.platform;
+        armRotate = robot.armRotate;
+        stoneGripper = robot.stoneGripper;
+        suctionPlatformL = robot.suctionPlatformL;
+        suctionPlatformR = robot.suctionPlatformR;
         constrictL = robot.constrictL;
         //constrictR = robot.constrictR;
         gate = robot.gate;
         //extrusionL = robot.extrusionL;
         //extrusionR = robot.extrusionR;
 
+        suctionPlatformR.setPosition(Servo.MAX_POSITION);
+        suctionPlatformL.setPosition(Servo.MAX_POSITION);
         //Sets encoders back to 0 so that they are not messed up.
         robot.resetDriveEncoders();
 
         //Set starting position for arm servo
         arm.setPosition(Servo.MAX_POSITION);
-        platformR.setPosition(Servo.MIN_POSITION);
-        platformL.setPosition(Servo.MAX_POSITION);
-        constrictL.setPosition(Servo.MIN_POSITION);
+        platform.setPosition(Servo.MIN_POSITION);
+
+
+        //constrictL.setPosition(Servo.MIN_POSITION);
         pusher.setPosition(Servo.MAX_POSITION);
 
 
@@ -91,6 +98,7 @@ public class MainTeleOp extends OpMode {
         LiftControl();
         PlatformControl();
         Intake();
+        automatedMotions();
 
         //Possible Methods
         /* Test();
@@ -174,6 +182,15 @@ public class MainTeleOp extends OpMode {
             greenWheelLeft.setPower(-1*spit);
         }
 
+    }
+    public void automatedMotions(){
+        //TODO Move verticalLifts and armRotate
+        if(gamepad2.x) {
+            stoneGripper.setPosition(Servo.MAX_POSITION);
+            pusher.setPosition(Servo.MIN_POSITION);
+        }if (gamepad2.y){
+            stoneGripper.setPosition(Servo.MIN_POSITION);
+        }
     }
 
     public void DriveControl() {
@@ -354,11 +371,25 @@ public class MainTeleOp extends OpMode {
         double vertical = gamepad2.left_stick_y;
         double horizontal = gamepad2.right_stick_x;
 
+        boolean leftBumper = gamepad2.left_bumper;
+        boolean rightBumper = gamepad2.right_bumper;
+
+
+        if(leftBumper)
+            stoneGripper.setPosition(Servo.MAX_POSITION);
+        if(rightBumper)
+            stoneGripper.setPosition(Servo.MIN_POSITION);
+
         //README intakes
-        robot.horizontalLift.setPower(horizontal);
+       // robot.horizontalLift.setPower(horizontal);
         //robot.verticalLift.setPower((verticalLift.getCurrentPosition() < -300
                 //|| verticalLift.getCurrentPosition() > 2260) ? 0 : vertical);
+
+
+        robot.armRotate.setDirection();
         robot.verticalLift.setPower(vertical);
+
+        //TODO Move verticalLift by increments when dpad_up and dpad_down pressed.
 
         //README Suction wheels
         /*robot.greenWheelLeft.setPower(0.1);
@@ -373,10 +404,12 @@ public class MainTeleOp extends OpMode {
 
 
         //INFO Do constriction and close gate.=
-        if (gamepad2.dpad_left)
+        /*if (gamepad2.dpad_left) {
             pusher.setPosition(Servo.MAX_POSITION);
+
+        }
         if(gamepad2.dpad_right)
-            pusher.setPosition(Servo.MIN_POSITION);
+            pusher.setPosition(Servo.MIN_POSITION);*/
             /*robot.gate.setPosition(1);
             //Delay 0.8 second
             Handler h = new Handler();
@@ -402,10 +435,10 @@ public class MainTeleOp extends OpMode {
             h.postDelayed(r, 800);*/
 
 
-        if(gamepad2.dpad_up)
+        /*if(gamepad2.dpad_up)
             constrictL.setPosition(Servo.MIN_POSITION);
         if(gamepad2.dpad_down)
-            constrictL.setPosition(Servo.MAX_POSITION);
+            constrictL.setPosition(Servo.MAX_POSITION);*/
 
 
 //        if (gamepad2.dpad_left)
@@ -430,9 +463,9 @@ public class MainTeleOp extends OpMode {
 
     public void ArmControl() {
         if(gamepad1.a)
-            arm.setPosition(Servo.MAX_POSITION);
+            armRotate.setPosition(Servo.MAX_POSITION);
         if(gamepad1.b)
-            arm.setPosition(Servo.MIN_POSITION);
+            armRotate.setPosition(Servo.MIN_POSITION);
 
 
 
@@ -449,12 +482,14 @@ public class MainTeleOp extends OpMode {
     public void PlatformControl()
     {
         if(gamepad1.x) {
-            platformR.setPosition(Servo.MAX_POSITION);
-            platformL.setPosition(Servo.MIN_POSITION);
+            platform.setPosition(Servo.MAX_POSITION);
+            //platformR.setPosition(Servo.MAX_POSITION);
+            //platformL.setPosition(Servo.MIN_POSITION);
         }
         if(gamepad1.y) {
-            platformR.setPosition(Servo.MIN_POSITION);
-            platformL.setPosition(Servo.MAX_POSITION);
+            platform.setPosition(Servo.MIN_POSITION);
+//platformR.setPosition(Servo.MIN_POSITION);
+            //platformL.setPosition(Servo.MAX_POSITION);
         }
     }
 }
